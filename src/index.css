@@ -15,3 +15,7 @@ body {
   margin: 0;
   background-color: #242424;
 }
+
+p, a, h1, h2, h3 {
+  color: #dfdfdf;
+}

@@ -1,34 +1,38 @@
 /** @format */
 
-import {Box, useTheme} from '@mui/material';
-import {type ChangeEvent, useState} from 'react';
-import {CustomTextField} from './components/CustomTextField';
 import {Header} from './components/Header';
 import {RootLayout} from './layouts/RootLayout';
 import {ContentLayout} from './layouts/ContentLayout';
+import {TaskList} from './components/TaskList';
+import {useEffect} from 'react';
+import {STORAGE_KEY} from './constants.ts';
+import {isTaskData} from './helpers/isTaskData.ts';
+import {useAppContext} from './context/appContext.tsx';
 
 const App = () => {
-  const [value, setValue] = useState<string>('');
+  const {onSetSavedTasks} = useAppContext();
 
-  const handleSetValue = (e: ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
-  };
-
-  const theme = useTheme();
+  useEffect(() => {
+    const item = localStorage.getItem(STORAGE_KEY);
+    if (!item) return;
+    try {
+      const saved = JSON.parse(item);
+      if (isTaskData(saved)) {
+        onSetSavedTasks(saved);
+      }
+    } catch (error) {
+      console.log('Ошибка парсинга json');
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
+    }
+  }, [onSetSavedTasks]);
 
   return (
     <RootLayout>
       <ContentLayout>
         <Header />
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: theme.spacing(1),
-          }}
-        >
-          <CustomTextField value={value} onChange={handleSetValue} />
-        </Box>
+        <TaskList />
       </ContentLayout>
     </RootLayout>
   );

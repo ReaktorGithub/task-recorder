@@ -13,7 +13,7 @@ const Header = () => {
         height: '72px',
       }}
     >
-      <Typography component='h1' sx={{fontSize: '24px', fontWeight: 600, color: '#dfdfdf'}}>
+      <Typography component='h1' sx={{fontSize: '24px', fontWeight: 600}}>
         Отчет по задачам
       </Typography>
     </Box>

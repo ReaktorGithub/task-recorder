@@ -6,9 +6,11 @@ export const Root = styled(TextField)(({theme}) => ({
   background: '#fff',
   height: '40px',
   width: '100%',
+  borderRadius: '8px',
 
   '.MuiInputBase-input': {
     height: '40px',
     padding: theme.spacing(0, 2),
+    fontSize: '18px',
   },
 }));

@@ -11,7 +11,7 @@ const ContentLayout = ({children}: Props) => {
   return (
     <Box
       sx={{
-        maxWidth: '800px',
+        maxWidth: '900px',
         width: '100%',
       }}
     >
