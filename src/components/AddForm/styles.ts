@@ -10,9 +10,12 @@ export const Root = styled(Box)(({theme}) => ({
 
 export const FormRow = styled(Box)(({theme}) => ({
   display: 'grid',
-  gridTemplateColumns: '160px 150px 1fr 105px',
+  gridTemplateColumns: '170px 150px 1fr 105px',
   gridTemplateRows: '1fr',
   gap: theme.spacing(2),
+  borderBottom: '1px solid #444',
+  borderTop: '1px solid #444',
+  padding: theme.spacing(2, 0),
 }));
 
 export const AddRecordButton = styled(Button)(() => ({
@@ -30,11 +33,11 @@ export const AddRecordButton = styled(Button)(() => ({
 export const CancelRecordButton = styled(Button)(() => ({
   width: '150px',
   borderRadius: '8px',
-  background: '#ae3a3a',
-  color: '#1e1e1e',
+  background: '#606060',
+  color: '#dfdfdf',
 
   '&:hover': {
-    background: '#cf5050',
+    background: '#787878',
   },
 }));
 

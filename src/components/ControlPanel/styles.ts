@@ -59,19 +59,6 @@ export const SaveButton = styled(Button)(({theme}) => ({
   },
 }));
 
-export const ResetButton = styled(Button)(({theme}) => ({
-  height: '40px',
-  borderRadius: '8px',
-  background: '#ae3a3a',
-  color: '#1e1e1e',
-  flexShrink: 0,
-  gap: theme.spacing(1),
-
-  '&:hover': {
-    background: '#cf5050',
-  },
-}));
-
 export const MenuBox = styled(Box)(({theme}) => ({
   padding: theme.spacing(8, 6),
   width: '400px',
@@ -94,17 +81,17 @@ export const MenuItem = styled(Box)(({theme}) => ({
   alignItems: 'center',
 }));
 
-export const ControllerBox = styled(Box)(({theme}) => ({
+export const ControllerBox = styled(Box)(() => ({
   display: 'flex',
   justifyContent: 'flex-end',
 }));
 
-export const MenuText = styled(Typography)(({theme}) => ({
+export const MenuText = styled(Typography)(() => ({
   color: '#1e1e1e',
   fontSize: '18px',
 }));
 
-export const DescriptionText = styled(Typography)(({theme}) => ({
+export const DescriptionText = styled(Typography)(() => ({
   color: '#1e1e1e',
   fontStyle: 'italic',
 }));

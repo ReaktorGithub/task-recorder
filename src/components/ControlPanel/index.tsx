@@ -8,11 +8,10 @@ import {
   MenuItem,
   MenuText,
   ReportButton,
-  ResetButton,
   Root,
   SaveButton,
 } from './styles.ts';
-import {Clear, ContentCopy, Menu, Save} from '@mui/icons-material';
+import {ContentCopy, Menu, Save} from '@mui/icons-material';
 import {useAppContext} from '../../context/appContext.tsx';
 import {type ChangeEvent, useState} from 'react';
 import {Drawer, Switch} from '@mui/material';
@@ -22,7 +21,7 @@ import {CustomNumberField} from '../UI/CustomNumberField';
 const ControlPanel = () => {
   const [openMenu, setOpenMenu] = useState<boolean>(false);
 
-  const {onSave, canSave, onReport, onClearTasks, onUpdateSettings, settings} = useAppContext();
+  const {onSave, canSave, onReport, onUpdateSettings, settings} = useAppContext();
 
   const handleOpenMenu = () => {
     setOpenMenu(true);
@@ -63,10 +62,6 @@ const ControlPanel = () => {
           <ContentCopy />
         </ReportButton>
       </ControlButtonsBox>
-
-      <ResetButton onClick={onClearTasks}>
-        <Clear />
-      </ResetButton>
 
       <Drawer open={openMenu} onClose={handleCloseMenu}>
         <MenuBox>

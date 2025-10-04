@@ -64,7 +64,7 @@ const AddForm = ({onCancel, onAdded}: Props) => {
     <Root>
       <FormRow>
         <Block>
-          <Typography>Дата начала (h:mm)</Typography>
+          <Typography>Время начала (h:mm)</Typography>
           <InputsBox>
             <CustomNumberField
               value={hourBegin}
