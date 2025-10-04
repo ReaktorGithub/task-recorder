@@ -1,14 +1,15 @@
 /** @format */
 
-import {InputsBox, Block, DividerText, FormRow, Root, CancelRecordButton} from './styles.ts';
+import {Block, FormRow, Root, CancelRecordButton, InputsBox} from './styles.ts';
 import {Typography} from '@mui/material';
-import {CustomNumberField} from '../UI/CustomNumberField';
 import {AddRecordButton} from './styles.ts';
 import {useState} from 'react';
 import {getCurrentTime} from '../../helpers/getCurrentTime.ts';
 import {CustomTextField} from '../UI/CustomTextField';
 import {calcDuration} from '../../helpers/calcDuration.ts';
 import {useAppContext} from '../../context/appContext.tsx';
+import {EditTime} from './EditTime.tsx';
+import {CustomNumberField} from '../UI/CustomNumberField';
 
 interface Props {
   onCancel: () => void;
@@ -65,29 +66,18 @@ const AddForm = ({onCancel, onAdded}: Props) => {
       <FormRow>
         <Block>
           <Typography>Время начала (h:mm)</Typography>
-          <InputsBox>
-            <CustomNumberField
-              value={hourBegin}
-              onChange={handleSetHourBegin}
-              min={0}
-              max={23}
-              width='55px'
-            />
-            <DividerText>:</DividerText>
-            <CustomNumberField
-              value={minuteBegin}
-              onChange={handleSetMinuteBegin}
-              min={0}
-              max={59}
-              width='55px'
-            />
-          </InputsBox>
+          <EditTime
+            hour={hourBegin}
+            minute={minuteBegin}
+            onChangeHour={handleSetHourBegin}
+            onChangeMinute={handleSetMinuteBegin}
+          />
         </Block>
 
         <Block>
           <Typography>Номер</Typography>
           <InputsBox>
-            <Typography>{settings.prefix}-</Typography>
+            {settings.prefix ? <Typography>{settings.prefix}-</Typography> : null}
             <CustomNumberField value={taskNumber} onChange={handleSetTaskNumber} maxLength={5} />
           </InputsBox>
         </Block>

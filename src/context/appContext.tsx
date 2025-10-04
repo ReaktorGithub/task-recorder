@@ -12,7 +12,7 @@ export interface AppContextState {
   onClearTasks: () => void;
   onAddTask: (newTask: NewTaskData) => void;
   onRemoveTask: (id: string) => void;
-  onUpdateTask: (id: string, data: NewTaskData) => void;
+  onUpdateTask: (data: TaskData) => void;
   onReport: () => void;
   onSave: () => void;
   onSetSettings: (value: Settings) => void;

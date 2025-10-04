@@ -60,17 +60,19 @@ export const SaveButton = styled(Button)(({theme}) => ({
 }));
 
 export const MenuBox = styled(Box)(({theme}) => ({
-  padding: theme.spacing(8, 6),
+  padding: theme.spacing(12, 6, 8, 6),
   width: '400px',
   maxWidth: '50vw',
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(2),
+  boxSizing: 'border-box',
+  position: 'relative',
 
   [`${theme.breakpoints.down('md')}`]: {
     maxWidth: 'unset',
     width: '100vw',
-    padding: theme.spacing(6, 4),
+    padding: theme.spacing(10, 4, 6, 4),
   },
 }));
 
@@ -94,4 +96,20 @@ export const MenuText = styled(Typography)(() => ({
 export const DescriptionText = styled(Typography)(() => ({
   color: '#1e1e1e',
   fontStyle: 'italic',
+}));
+
+export const CloseButton = styled(Button)(() => ({
+  height: '32px',
+  minWidth: '32px',
+  width: '32px',
+  borderRadius: '50%',
+  position: 'absolute',
+  top: '16px',
+  right: '16px',
+
+  '.MuiSvgIcon-root': {
+    path: {
+      fill: '#000',
+    },
+  },
 }));

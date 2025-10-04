@@ -67,19 +67,14 @@ const AppProvider = ({children}: Props) => {
   );
 
   const onUpdateTask = useCallback(
-    (id: string, updatedTask: NewTaskData) => {
+    (updatedTask: TaskData) => {
       setSavedTasks(prev => {
-        const found = prev.find(data => data.id === id);
-        if (!found) {
-          return prev;
-        }
-        const saved = [
-          ...prev,
-          {
-            ...found,
-            ...updatedTask,
-          },
-        ];
+        const saved = prev.map(data => {
+          if (data.id === updatedTask.id) {
+            return updatedTask;
+          }
+          return data;
+        });
         if (settings.autosave) {
           saveAppDataToStorage(saved, settings);
         }

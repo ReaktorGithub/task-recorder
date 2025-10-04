@@ -3,13 +3,9 @@
 import {CustomTableHead} from '../UI/Table/CustomTableHead';
 import {Modal, Table, TableBody, TableRow} from '@mui/material';
 import {CustomTableHeadCell} from '../UI/Table/CustomTableHeadCell';
-import {CustomTableCell} from '../UI/Table/CustomTableCell';
 import {getTaskDescription} from '../../helpers/getTaskDescription.ts';
-import {getTimeClock} from '../../helpers/getTimeClock.ts';
 import type {TaskData} from '../../types.ts';
-import {getDurationClock} from '../../helpers/getDurationClock.ts';
 import {useAppContext} from '../../context/appContext.tsx';
-import {getMaybeRoundedDuration} from '../../helpers/getMaybeRoundedDuration.ts';
 import {Clear, Close} from '@mui/icons-material';
 import {
   ButtonsBox,
@@ -21,6 +17,7 @@ import {
   ResetButton,
 } from './styles.ts';
 import {useState} from 'react';
+import {TaskRow} from './TaskRow.tsx';
 
 interface Props {
   taskData: TaskData[];
@@ -30,7 +27,7 @@ const TaskTable = ({taskData}: Props) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [taskToRemoveId, setTaskToRemoveId] = useState<string | null>(null);
 
-  const {settings, savedTasks, onClearTasks, onRemoveTask} = useAppContext();
+  const {savedTasks, onClearTasks, onRemoveTask, onUpdateTask} = useAppContext();
 
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -66,12 +63,17 @@ const TaskTable = ({taskData}: Props) => {
         <CustomTableHead>
           <TableRow>
             <CustomTableHeadCell>Описание</CustomTableHeadCell>
-            <CustomTableHeadCell width='120px'>Длительность</CustomTableHeadCell>
+            <CustomTableHeadCell width='130px'>Длительность</CustomTableHeadCell>
             <CustomTableHeadCell width='60px'>Начато</CustomTableHeadCell>
             <CustomTableHeadCell width='90px'>Завершено</CustomTableHeadCell>
+            <CustomTableHeadCell width='32px' />
             <CustomTableHeadCell width='32px'>
               {taskData.length > 0 && (
-                <ResetButton disableRipple onClick={() => handleClear(null)}>
+                <ResetButton
+                  disableRipple
+                  onClick={() => handleClear(null)}
+                  title='Очистить список'
+                >
                   <Clear />
                 </ResetButton>
               )}
@@ -80,25 +82,7 @@ const TaskTable = ({taskData}: Props) => {
         </CustomTableHead>
         <TableBody>
           {taskData.map(data => (
-            <TableRow key={data.id}>
-              <CustomTableCell>{getTaskDescription(data.title, data.taskNumber)}</CustomTableCell>
-              <CustomTableCell>
-                {getDurationClock(
-                  getMaybeRoundedDuration(
-                    data.duration,
-                    settings.storyPoint,
-                    settings.roundDuration,
-                  ),
-                )}
-              </CustomTableCell>
-              <CustomTableCell>{getTimeClock(data.timeFrom)}</CustomTableCell>
-              <CustomTableCell>{getTimeClock(data.timeTo)}</CustomTableCell>
-              <CustomTableCell>
-                <ResetButton disableRipple onClick={() => handleClear(data.id)}>
-                  <Clear />
-                </ResetButton>
-              </CustomTableCell>
-            </TableRow>
+            <TaskRow key={data.id} data={data} onClear={handleClear} onConfirm={onUpdateTask} />
           ))}
         </TableBody>
       </Table>

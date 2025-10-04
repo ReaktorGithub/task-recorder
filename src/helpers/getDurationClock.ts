@@ -1,9 +1,8 @@
 /** @format */
+import {getTimeFromMinutes} from './getTimeFromMinutes.ts';
 
 const getDurationClock = (minutes: number): string => {
-  const hours = Math.floor((minutes / 60) % 60);
-  const minutesInHours = hours * 60;
-  const rest = minutes - minutesInHours;
+  const {hours, minutes: rest} = getTimeFromMinutes(minutes);
   return `${hours}h ${rest}m`;
 };
 

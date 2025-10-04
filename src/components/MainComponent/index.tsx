@@ -19,11 +19,12 @@ import {calcTotalWorkTime} from '../../helpers/calcTotalWorkTime.ts';
 import {TOTAL_WORK_TIME_MINUTES} from '../../constants.ts';
 import {useAppContext} from '../../context/appContext.tsx';
 import {TaskTable} from '../TaskTable';
+import {roundMinutesToStoryPoint} from '../../helpers/roundMinutesToStoryPoint.ts';
 
 const MainComponent = () => {
   const [isAdding, setIsAdding] = useState<boolean>(false);
 
-  const {savedTasks} = useAppContext();
+  const {savedTasks, settings} = useAppContext();
 
   const handleAdd = () => {
     setIsAdding(true);
@@ -39,7 +40,10 @@ const MainComponent = () => {
     return 0;
   });
 
-  const totalWorkTime = calcTotalWorkTime(sortedData);
+  const totalWorkTimeFact = calcTotalWorkTime(sortedData);
+  const totalWorkTime = settings.roundDuration
+    ? roundMinutesToStoryPoint(totalWorkTimeFact, settings.storyPoint)
+    : totalWorkTimeFact;
   const restTime = TOTAL_WORK_TIME_MINUTES - totalWorkTime;
 
   return (
@@ -66,7 +70,7 @@ const MainComponent = () => {
         <AddForm onCancel={handleCancel} onAdded={handleCancel} />
       ) : (
         <AddButtonBox>
-          <AddButton onClick={handleAdd}>
+          <AddButton onClick={handleAdd} title='Добавить задачу'>
             <AddRounded fontSize='large' />
           </AddButton>
         </AddButtonBox>

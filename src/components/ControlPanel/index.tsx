@@ -1,5 +1,6 @@
 /** @format */
 import {
+  CloseButton,
   ControlButtonsBox,
   ControllerBox,
   DescriptionText,
@@ -11,7 +12,7 @@ import {
   Root,
   SaveButton,
 } from './styles.ts';
-import {ContentCopy, Menu, Save} from '@mui/icons-material';
+import {Close, ContentCopy, Menu, Save} from '@mui/icons-material';
 import {useAppContext} from '../../context/appContext.tsx';
 import {type ChangeEvent, useState} from 'react';
 import {Drawer, Switch} from '@mui/material';
@@ -58,7 +59,7 @@ const ControlPanel = () => {
             <Save /> Сохранить
           </SaveButton>
         )}
-        <ReportButton onClick={onReport}>
+        <ReportButton onClick={onReport} title='Копировать отчёт в буфер обмена'>
           <ContentCopy />
         </ReportButton>
       </ControlButtonsBox>
@@ -92,8 +93,8 @@ const ControlPanel = () => {
           </MenuItem>
 
           <DescriptionText>
-            Колонка "Длительность" в таблице будет визуально округлена до сторипойнта 15m. Также
-            округление отразится в отчёте при нажатии на кнопку "Копировать".
+            Колонка "Длительность" в таблице будет визуально округлена до сторипойнта. Также
+            округление отразится в отчётах.
           </DescriptionText>
 
           <MenuItem>
@@ -107,6 +108,10 @@ const ControlPanel = () => {
             Автосохранение будет происходить при каждом изменении записей. Ручное сохранение будет
             недоступно.
           </DescriptionText>
+
+          <CloseButton onClick={handleCloseMenu}>
+            <Close />
+          </CloseButton>
         </MenuBox>
       </Drawer>
     </Root>

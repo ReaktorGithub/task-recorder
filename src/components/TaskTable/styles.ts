@@ -2,19 +2,57 @@
 
 import {Box, Button, styled, Typography} from '@mui/material';
 
-export const ResetButton = styled(Button)(({theme}) => ({
+export const ResetButton = styled(Button)(() => ({
   height: '32px',
   minWidth: '32px',
   width: '32px',
   borderRadius: '8px',
   background: '#ffffff',
-  color: '#1e1e1e',
   flexShrink: 0,
-  gap: theme.spacing(1),
 
   '.MuiSvgIcon-root': {
     path: {
       fill: '#ff0000',
+    },
+  },
+}));
+
+export const EditButton = styled(Button)(() => ({
+  height: '32px',
+  minWidth: '32px',
+  width: '32px',
+  borderRadius: '8px',
+  flexShrink: 0,
+
+  '.MuiSvgIcon-root': {
+    path: {
+      fill: '#ffffff',
+    },
+  },
+}));
+
+export const CancelEditButton = styled(Button)(() => ({
+  height: '32px',
+  minWidth: '32px',
+  width: '32px',
+  flexShrink: 0,
+
+  '.MuiSvgIcon-root': {
+    path: {
+      fill: '#ff0000',
+    },
+  },
+}));
+
+export const ConfirmEditButton = styled(Button)(() => ({
+  height: '32px',
+  minWidth: '32px',
+  width: '32px',
+  flexShrink: 0,
+
+  '.MuiSvgIcon-root': {
+    path: {
+      fill: '#56ff00',
     },
   },
 }));
@@ -96,4 +134,10 @@ export const CancelButton = styled(Button)(() => ({
   '&:hover': {
     background: '#959595',
   },
+}));
+
+export const EditTitleBox = styled(Box)(({theme}) => ({
+  display: 'grid',
+  gridTemplateColumns: '120px 1fr',
+  gap: theme.spacing(2),
 }));
