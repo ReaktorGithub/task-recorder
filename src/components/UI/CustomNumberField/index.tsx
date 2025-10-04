@@ -40,6 +40,17 @@ const CustomNumberField = ({min, max, value, maxLength, onChange, width}: Props)
       variant='filled'
       type='number'
       sx={{width: width || '100%'}}
+      slotProps={{
+        input: {
+          inputProps: {
+            onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => {
+              if (e.key === 'e' || e.key === 'E') {
+                e.preventDefault();
+              }
+            },
+          },
+        },
+      }}
     />
   );
 };
