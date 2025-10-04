@@ -1,19 +1,23 @@
 /** @format */
 
-import {CustomTableHead} from '../Table/CustomTableHead';
+import {CustomTableHead} from '../UI/Table/CustomTableHead';
 import {Table, TableBody, TableRow} from '@mui/material';
-import {CustomTableHeadCell} from '../Table/CustomTableHeadCell';
-import {CustomTableCell} from '../Table/CustomTableCell';
+import {CustomTableHeadCell} from '../UI/Table/CustomTableHeadCell';
+import {CustomTableCell} from '../UI/Table/CustomTableCell';
 import {getTaskDescription} from '../../helpers/getTaskDescription.ts';
-import {EditDuration} from '../EditDuration';
 import {getTimeClock} from '../../helpers/getTimeClock.ts';
 import type {TaskData} from '../../types.ts';
+import {getDurationClock} from '../../helpers/getDurationClock.ts';
+import {useAppContext} from '../../context/appContext.tsx';
+import {getMaybeRoundedDuration} from '../../helpers/getMaybeRoundedDuration.ts';
 
 interface Props {
   taskData: TaskData[];
 }
 
 const TaskTable = ({taskData}: Props) => {
+  const {settings} = useAppContext();
+
   return (
     <Table sx={{tableLayout: 'fixed'}}>
       <CustomTableHead>
@@ -29,7 +33,9 @@ const TaskTable = ({taskData}: Props) => {
           <TableRow key={data.id}>
             <CustomTableCell>{getTaskDescription(data.title, data.taskNumber)}</CustomTableCell>
             <CustomTableCell>
-              <EditDuration data={data} />
+              {getDurationClock(
+                getMaybeRoundedDuration(data.duration, settings.storyPoint, settings.roundDuration),
+              )}
             </CustomTableCell>
             <CustomTableCell>{getTimeClock(data.timeFrom)}</CustomTableCell>
             <CustomTableCell>{getTimeClock(data.timeTo)}</CustomTableCell>

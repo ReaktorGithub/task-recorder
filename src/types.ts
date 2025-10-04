@@ -21,6 +21,7 @@ export type Settings = {
   autosave: boolean;
   roundDuration: boolean;
   prefix: string;
+  storyPoint: number;
 };
 
 export type AppData = {

@@ -48,7 +48,7 @@ const AddForm = ({onCancel, onAdded}: Props) => {
 
     onAddTask({
       title,
-      taskNumber: `${settings.prefix}-${taskNumber}`,
+      taskNumber: taskNumber ? `${settings.prefix}-${taskNumber}` : '',
       timeFrom: {
         hours: hourBeginInt,
         minutes: minuteBeginInt,

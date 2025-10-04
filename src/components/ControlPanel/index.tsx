@@ -17,6 +17,7 @@ import {useAppContext} from '../../context/appContext.tsx';
 import {type ChangeEvent, useState} from 'react';
 import {Drawer, Switch} from '@mui/material';
 import {CustomTextField} from '../UI/CustomTextField';
+import {CustomNumberField} from '../UI/CustomNumberField';
 
 const ControlPanel = () => {
   const [openMenu, setOpenMenu] = useState<boolean>(false);
@@ -35,6 +36,10 @@ const ControlPanel = () => {
     onUpdateSettings('prefix', value);
   };
 
+  const handleUpdateStoryPoint = (value: string) => {
+    onUpdateSettings('storyPoint', parseInt(value));
+  };
+
   const handleUpdateRoundDuration = (_: ChangeEvent<HTMLInputElement>, checked: boolean) => {
     onUpdateSettings('roundDuration', checked);
   };
@@ -49,9 +54,11 @@ const ControlPanel = () => {
         <MenuButton disableRipple onClick={handleOpenMenu}>
           <Menu fontSize='large' />
         </MenuButton>
-        <SaveButton onClick={onSave} disabled={!canSave}>
-          <Save /> Сохранить
-        </SaveButton>
+        {!settings.autosave && (
+          <SaveButton onClick={onSave} disabled={!canSave}>
+            <Save /> Сохранить
+          </SaveButton>
+        )}
         <ReportButton onClick={onReport}>
           <ContentCopy />
         </ReportButton>
@@ -67,6 +74,18 @@ const ControlPanel = () => {
             <MenuText>Префикс новых задач</MenuText>
             <ControllerBox>
               <CustomTextField value={settings.prefix} onChange={handleUpdatePrefix} />
+            </ControllerBox>
+          </MenuItem>
+
+          <MenuItem>
+            <MenuText>Сторипойнт, минуты</MenuText>
+            <ControllerBox>
+              <CustomNumberField
+                value={String(settings.storyPoint)}
+                onChange={handleUpdateStoryPoint}
+                maxLength={3}
+                min={0}
+              />
             </ControllerBox>
           </MenuItem>
 
@@ -90,7 +109,8 @@ const ControlPanel = () => {
           </MenuItem>
 
           <DescriptionText>
-            Автосохранение будет происходить при каждом изменении записей.
+            Автосохранение будет происходить при каждом изменении записей. Ручное сохранение будет
+            недоступно.
           </DescriptionText>
         </MenuBox>
       </Drawer>

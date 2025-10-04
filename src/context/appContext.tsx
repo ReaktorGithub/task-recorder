@@ -8,7 +8,7 @@ export interface AppContextState {
   savedTasks: TaskData[];
   canSave: boolean;
   settings: Settings;
-  onSetSavedTasks: (value: TaskData[], skipSaveCheck?: boolean) => void;
+  onSetSavedTasks: (value: TaskData[]) => void;
   onClearTasks: () => void;
   onAddTask: (newTask: NewTaskData) => void;
   onRemoveTask: (id: string) => void;

@@ -9,4 +9,5 @@ export const DEFAULT_SETTINGS: Settings = {
   autosave: false,
   roundDuration: false,
   prefix: 'AS',
+  storyPoint: 15,
 };
