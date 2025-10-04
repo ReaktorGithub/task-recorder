@@ -4,12 +4,6 @@ import {Box, Button, styled, Typography} from '@mui/material';
 
 export const Root = styled(Box)(({theme}) => ({
   display: 'flex',
-  flexDirection: 'column',
-  gap: theme.spacing(4),
-}));
-
-export const ControlPanelBox = styled(Box)(({theme}) => ({
-  display: 'flex',
   gap: theme.spacing(4),
   width: '100%',
   justifyContent: 'space-between',
@@ -21,8 +15,20 @@ export const ControlButtonsBox = styled(Box)(({theme}) => ({
   gap: theme.spacing(2),
 }));
 
-export const StatsBox = styled(Box)(() => ({
-  width: '100%',
+export const MenuButton = styled(Button)(() => ({
+  minWidth: '40px',
+  width: '40px',
+  height: '40px',
+  borderRadius: '30%',
+  background: 'transparent',
+  flexShrink: 0,
+  padding: 0,
+
+  '.MuiSvgIcon-root': {
+    path: {
+      fill: '#fff',
+    },
+  },
 }));
 
 export const ReportButton = styled(Button)(({theme}) => ({
@@ -66,42 +72,39 @@ export const ResetButton = styled(Button)(({theme}) => ({
   },
 }));
 
-export const AddButtonBox = styled(Box)(() => ({
+export const MenuBox = styled(Box)(({theme}) => ({
+  padding: theme.spacing(8, 6),
+  width: '400px',
+  maxWidth: '50vw',
   display: 'flex',
-  justifyContent: 'center',
-}));
+  flexDirection: 'column',
+  gap: theme.spacing(2),
 
-export const AddButton = styled(Button)(() => ({
-  borderRadius: '20px',
-  width: '60px',
-  height: '38px',
-  background: '#cb5900',
-  minWidth: 'unset',
-
-  '.MuiSvgIcon-root': {
-    path: {
-      fill: '#fff',
-    },
-  },
-
-  '&:hover': {
-    background: '#ff7700',
+  [`${theme.breakpoints.down('md')}`]: {
+    maxWidth: 'unset',
+    width: '100vw',
+    padding: theme.spacing(6, 4),
   },
 }));
 
-export const WorkTimeText = styled(Typography)(() => ({
-  span: {
-    fontWeight: 'bold',
-  },
-}));
-
-export const OverworkText = styled(Typography)(() => ({
-  color: '#ff3c3c',
-}));
-
-export const EmptyBox = styled(Box)(() => ({
-  display: 'flex',
-  justifyContent: 'center',
+export const MenuItem = styled(Box)(({theme}) => ({
+  display: 'grid',
+  gridTemplateColumns: '1fr 150px',
+  gap: theme.spacing(1),
   alignItems: 'center',
-  width: '100%',
+}));
+
+export const ControllerBox = styled(Box)(({theme}) => ({
+  display: 'flex',
+  justifyContent: 'flex-end',
+}));
+
+export const MenuText = styled(Typography)(({theme}) => ({
+  color: '#1e1e1e',
+  fontSize: '18px',
+}));
+
+export const DescriptionText = styled(Typography)(({theme}) => ({
+  color: '#1e1e1e',
+  fontStyle: 'italic',
 }));

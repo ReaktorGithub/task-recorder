@@ -1,21 +1,28 @@
 /** @format */
 
 import {createContext, useContext} from 'react';
-import type {NewTaskData, TaskData} from '../types.ts';
+import type {NewTaskData, Settings, TaskData} from '../types.ts';
+import {DEFAULT_SETTINGS} from '../constants.ts';
 
 export interface AppContextState {
   savedTasks: TaskData[];
-  onSetSavedTasks: (value: TaskData[]) => void;
+  canSave: boolean;
+  settings: Settings;
+  onSetSavedTasks: (value: TaskData[], skipSaveCheck?: boolean) => void;
   onClearTasks: () => void;
   onAddTask: (newTask: NewTaskData) => void;
   onRemoveTask: (id: string) => void;
   onUpdateTask: (id: string, data: NewTaskData) => void;
   onReport: () => void;
   onSave: () => void;
+  onSetSettings: (value: Settings) => void;
+  onUpdateSettings: (field: keyof Settings, value: unknown) => void;
 }
 
 export const appContextInitial: AppContextState = {
   savedTasks: [],
+  canSave: false,
+  settings: DEFAULT_SETTINGS,
   onSetSavedTasks: () => undefined,
   onClearTasks: () => undefined,
   onAddTask: () => undefined,
@@ -23,6 +30,8 @@ export const appContextInitial: AppContextState = {
   onUpdateTask: () => undefined,
   onReport: () => undefined,
   onSave: () => undefined,
+  onUpdateSettings: () => undefined,
+  onSetSettings: () => undefined,
 };
 
 export const AppContext = createContext<AppContextState>(appContextInitial);

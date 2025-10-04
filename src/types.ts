@@ -16,3 +16,14 @@ export type TaskData = {
 };
 
 export type NewTaskData = Omit<TaskData, 'id'>;
+
+export type Settings = {
+  autosave: boolean;
+  roundDuration: boolean;
+  prefix: string;
+};
+
+export type AppData = {
+  data: TaskData[];
+  settings: Settings;
+};

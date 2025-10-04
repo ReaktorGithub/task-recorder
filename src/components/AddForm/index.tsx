@@ -2,19 +2,20 @@
 
 import {InputsBox, Block, DividerText, FormRow, Root, CancelRecordButton} from './styles.ts';
 import {Typography} from '@mui/material';
-import {CustomNumberField} from '../CustomNumberField';
+import {CustomNumberField} from '../UI/CustomNumberField';
 import {AddRecordButton} from './styles.ts';
 import {useState} from 'react';
 import {getCurrentTime} from '../../helpers/getCurrentTime.ts';
-import {CustomTextField} from '../CustomTextField';
+import {CustomTextField} from '../UI/CustomTextField';
 import {calcDuration} from '../../helpers/calcDuration.ts';
 import {useAppContext} from '../../context/appContext.tsx';
 
 interface Props {
   onCancel: () => void;
+  onAdded: () => void;
 }
 
-const AddForm = ({onCancel}: Props) => {
+const AddForm = ({onCancel, onAdded}: Props) => {
   const defaultTime = getCurrentTime();
 
   const [hourBegin, setHourBegin] = useState<string>(String(defaultTime.hours));
@@ -22,7 +23,7 @@ const AddForm = ({onCancel}: Props) => {
   const [taskNumber, setTaskNumber] = useState<string>('');
   const [title, setTitle] = useState<string>('');
 
-  const {onAddTask} = useAppContext();
+  const {onAddTask, settings} = useAppContext();
 
   const handleSetHourBegin = (value: string) => {
     setHourBegin(value);
@@ -47,7 +48,7 @@ const AddForm = ({onCancel}: Props) => {
 
     onAddTask({
       title,
-      taskNumber: `AS-${taskNumber}`,
+      taskNumber: `${settings.prefix}-${taskNumber}`,
       timeFrom: {
         hours: hourBeginInt,
         minutes: minuteBeginInt,
@@ -56,6 +57,7 @@ const AddForm = ({onCancel}: Props) => {
       duration: calcDuration({hours: hourBeginInt, minutes: minuteBeginInt}, currentTime),
       collectedOn: new Date(),
     });
+    onAdded();
   };
 
   return (
@@ -85,7 +87,7 @@ const AddForm = ({onCancel}: Props) => {
         <Block>
           <Typography>Номер</Typography>
           <InputsBox>
-            <Typography>AS-</Typography>
+            <Typography>{settings.prefix}-</Typography>
             <CustomNumberField value={taskNumber} onChange={handleSetTaskNumber} maxLength={5} />
           </InputsBox>
         </Block>

@@ -1,24 +1,30 @@
 /** @format */
 
 import {type ReactNode, useCallback, useMemo, useState} from 'react';
-import type {NewTaskData, TaskData} from '../types.ts';
+import type {AppData, NewTaskData, Settings, TaskData} from '../types.ts';
 import {AppContext} from './appContext.tsx';
 import {getDurationClock} from '../helpers/getDurationClock.ts';
-import {STORAGE_KEY} from '../constants.ts';
+import {DEFAULT_SETTINGS, STORAGE_KEY} from '../constants.ts';
 
 interface Props {
   children: ReactNode;
 }
 
 const AppProvider = ({children}: Props) => {
+  const [canSave, setCanSave] = useState<boolean>(false);
   const [savedTasks, setSavedTasks] = useState<TaskData[]>([]);
+  const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
 
-  const onSetSavedTasks = useCallback((value: TaskData[]) => {
+  const onSetSavedTasks = useCallback((value: TaskData[], skipSaveCheck?: boolean) => {
     setSavedTasks(value);
+    if (!skipSaveCheck) {
+      setCanSave(true);
+    }
   }, []);
 
   const onClearTasks = useCallback(() => {
     setSavedTasks([]);
+    setCanSave(true);
   }, []);
 
   const onAddTask = useCallback((newTask: NewTaskData) => {
@@ -28,10 +34,12 @@ const AppProvider = ({children}: Props) => {
       ...newTask,
     };
     setSavedTasks(prev => [...prev, newTaskWithId]);
+    setCanSave(true);
   }, []);
 
   const onRemoveTask = useCallback((id: string) => {
     setSavedTasks(prev => prev.filter(data => data.id !== id));
+    setCanSave(true);
   }, []);
 
   const onUpdateTask = useCallback((id: string, updatedTask: NewTaskData) => {
@@ -48,6 +56,7 @@ const AppProvider = ({children}: Props) => {
       }
       return prev;
     });
+    setCanSave(true);
   }, []);
 
   const onReport = useCallback(() => {
@@ -67,12 +76,39 @@ const AppProvider = ({children}: Props) => {
   }, [savedTasks]);
 
   const onSave = useCallback(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(savedTasks));
-  }, [savedTasks]);
+    const dataToSave: AppData = {
+      data: savedTasks,
+      settings,
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
+    setCanSave(false);
+  }, [savedTasks, settings]);
+
+  const onUpdateSettings = useCallback(
+    (field: keyof Settings, value: unknown) => {
+      const newSettings: Settings = {
+        ...settings,
+        [field]: value,
+      };
+      setSettings(newSettings);
+      const dataToSave: AppData = {
+        data: savedTasks,
+        settings: newSettings,
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
+    },
+    [savedTasks, settings],
+  );
+
+  const onSetSettings = useCallback((value: Settings) => {
+    setSettings(value);
+  }, []);
 
   const value = useMemo(
     () => ({
       savedTasks,
+      canSave,
+      settings,
       onSetSavedTasks,
       onClearTasks,
       onAddTask,
@@ -80,16 +116,22 @@ const AppProvider = ({children}: Props) => {
       onUpdateTask,
       onReport,
       onSave,
+      onUpdateSettings,
+      onSetSettings,
     }),
     [
-      onAddTask,
-      onClearTasks,
-      onRemoveTask,
-      onSetSavedTasks,
-      onUpdateTask,
       savedTasks,
+      canSave,
+      settings,
+      onSetSavedTasks,
+      onClearTasks,
+      onAddTask,
+      onRemoveTask,
+      onUpdateTask,
       onReport,
       onSave,
+      onUpdateSettings,
+      onSetSettings,
     ],
   );
 

@@ -3,22 +3,24 @@
 import {Header} from './components/Header';
 import {RootLayout} from './layouts/RootLayout';
 import {ContentLayout} from './layouts/ContentLayout';
-import {TaskList} from './components/TaskList';
+import {MainComponent} from './components/MainComponent';
 import {useEffect} from 'react';
 import {STORAGE_KEY} from './constants.ts';
-import {isTaskData} from './helpers/isTaskData.ts';
+import {isAppData} from './helpers/isAppData.ts';
 import {useAppContext} from './context/appContext.tsx';
+import {ControlPanel} from './components/ControlPanel';
 
 const App = () => {
-  const {onSetSavedTasks} = useAppContext();
+  const {onSetSavedTasks, onSetSettings} = useAppContext();
 
   useEffect(() => {
     const item = localStorage.getItem(STORAGE_KEY);
     if (!item) return;
     try {
       const saved = JSON.parse(item);
-      if (isTaskData(saved)) {
-        onSetSavedTasks(saved);
+      if (isAppData(saved)) {
+        onSetSavedTasks(saved.data, true);
+        onSetSettings(saved.settings);
       }
     } catch (error) {
       console.log('Ошибка парсинга json');
@@ -26,13 +28,14 @@ const App = () => {
         console.log(error.message);
       }
     }
-  }, [onSetSavedTasks]);
+  }, [onSetSavedTasks, onSetSettings]);
 
   return (
     <RootLayout>
       <ContentLayout>
         <Header />
-        <TaskList />
+        <ControlPanel />
+        <MainComponent />
       </ContentLayout>
     </RootLayout>
   );

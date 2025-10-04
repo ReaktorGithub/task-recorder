@@ -10,7 +10,7 @@ export const Root = styled(Box)(({theme}) => ({
 
 export const FormRow = styled(Box)(({theme}) => ({
   display: 'grid',
-  gridTemplateColumns: '160px 125px 1fr 105px',
+  gridTemplateColumns: '160px 150px 1fr 105px',
   gridTemplateRows: '1fr',
   gap: theme.spacing(2),
 }));
