@@ -4,7 +4,6 @@ import {CustomTableCell} from '../UI/Table/CustomTableCell';
 import {getTaskDescription} from '../../helpers/getTaskDescription.ts';
 import {getDurationClock} from '../../helpers/getDurationClock.ts';
 import {getMaybeRoundedDuration} from '../../helpers/getMaybeRoundedDuration.ts';
-import {getTimeClock} from '../../helpers/getTimeClock.ts';
 import {AddButton, EditButton, ResetButton} from './styles.ts';
 import {AddRounded, Clear, Edit} from '@mui/icons-material';
 import {TableRow} from '@mui/material';
@@ -19,7 +18,7 @@ interface Props {
 }
 
 const RowDisplay = ({data, onClear, onStartEdit, onStartContinuing}: Props) => {
-  const {id, title, taskNumber, duration, timeTo, timeFrom} = data;
+  const {id, title, taskNumber, duration} = data;
   const {settings} = useAppContext();
 
   const handleClear = () => {

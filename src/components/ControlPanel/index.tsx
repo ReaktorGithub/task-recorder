@@ -74,7 +74,7 @@ const ControlPanel = () => {
           </MenuItem>
 
           <MenuItem>
-            <MenuText>Сторипойнт, минуты</MenuText>
+            <MenuText>Сторипойнт, мин.</MenuText>
             <ControllerBox>
               <CustomNumberField
                 value={String(settings.storyPoint)}

@@ -3,16 +3,19 @@ import type {TaskData} from '../../types.ts';
 import {useState} from 'react';
 import {RowEdit} from './RowEdit.tsx';
 import {RowDisplay} from './RowDisplay.tsx';
+import {RowContinuing} from './RowContinuing.tsx';
+import {useAppContext} from '../../context/appContext.tsx';
 
 interface Props {
   data: TaskData;
   onClear: (id: string) => void;
-  onConfirm: (newData: TaskData) => void;
 }
 
-const TaskRow = ({data, onClear, onConfirm}: Props) => {
+const TaskRow = ({data, onClear}: Props) => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [isContinuing, setIsContinuing] = useState<boolean>(false);
+
+  const {onUpdateTask} = useAppContext();
 
   const startEdit = () => {
     setIsEdit(true);
@@ -30,13 +33,18 @@ const TaskRow = ({data, onClear, onConfirm}: Props) => {
     setIsContinuing(false);
   };
 
-  const handleConfirmEdit = (newData: TaskData) => {
-    onConfirm(newData);
+  const handleConfirmUpdate = (newData: TaskData) => {
+    onUpdateTask(newData);
     setIsEdit(false);
+    setIsContinuing(false);
   };
 
+  if (isContinuing) {
+    return <RowContinuing data={data} onCancel={stopContinuing} onConfirm={handleConfirmUpdate} />;
+  }
+
   if (isEdit) {
-    return <RowEdit data={data} onCancelEdit={stopEdit} onConfirmEdit={handleConfirmEdit} />;
+    return <RowEdit data={data} onCancel={stopEdit} onConfirm={handleConfirmUpdate} />;
   }
 
   return (

@@ -9,8 +9,6 @@ export type TaskData = {
   id: string;
   taskNumber: string;
   title: string;
-  timeFrom: Time;
-  timeTo: Time;
   duration: number;
   collectedOn: Date;
 };

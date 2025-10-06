@@ -27,7 +27,7 @@ const TaskTable = ({taskData}: Props) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [taskToRemoveId, setTaskToRemoveId] = useState<string | null>(null);
 
-  const {savedTasks, onClearTasks, onRemoveTask, onUpdateTask} = useAppContext();
+  const {savedTasks, onClearTasks, onRemoveTask} = useAppContext();
 
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -64,7 +64,7 @@ const TaskTable = ({taskData}: Props) => {
           <TableRow>
             <CustomTableHeadCell>Описание</CustomTableHeadCell>
             <CustomTableHeadCell width='130px'>Длительность</CustomTableHeadCell>
-            <CustomTableHeadCell width='60px'>Продлить</CustomTableHeadCell>
+            <CustomTableHeadCell width='130px'>Продлить</CustomTableHeadCell>
             <CustomTableHeadCell width='32px' />
             <CustomTableHeadCell width='32px'>
               {taskData.length > 0 && (
@@ -81,7 +81,7 @@ const TaskTable = ({taskData}: Props) => {
         </CustomTableHead>
         <TableBody>
           {taskData.map(data => (
-            <TaskRow key={data.id} data={data} onClear={handleClear} onConfirm={onUpdateTask} />
+            <TaskRow key={data.id} data={data} onClear={handleClear} />
           ))}
         </TableBody>
       </Table>
