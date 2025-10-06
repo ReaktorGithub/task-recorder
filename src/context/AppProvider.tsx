@@ -1,11 +1,12 @@
 /** @format */
 
 import {type ReactNode, useCallback, useMemo, useState} from 'react';
-import type {NewTaskData, Settings, TaskData} from '../types.ts';
+import type {AddingFormData, NewTaskData, Settings, TaskData} from '../types.ts';
 import {AppContext} from './appContext.tsx';
 import {DEFAULT_SETTINGS} from '../constants.ts';
 import {saveAppDataToStorage} from '../helpers/saveAppDataToStorage.ts';
 import {copyDataToClipboard} from '../helpers/copyDataToClipboard.ts';
+import {useDebounce} from '../helpers/useDebounce.ts';
 
 interface Props {
   children: ReactNode;
@@ -15,6 +16,18 @@ const AppProvider = ({children}: Props) => {
   const [canSave, setCanSave] = useState<boolean>(false);
   const [savedTasks, setSavedTasks] = useState<TaskData[]>([]);
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
+  const [addingFormData, setAddingFormData] = useState<AddingFormData | null>(null);
+
+  const debounceSaveAddingToStorage = useCallback(
+    (updated: AddingFormData | null) => {
+      if (settings.autosave) {
+        saveAppDataToStorage({data: savedTasks, settings, addingFormData: updated});
+      }
+    },
+    [savedTasks, settings],
+  );
+
+  const {onChange: onSaveAdding} = useDebounce(debounceSaveAddingToStorage, 600);
 
   const onSetSavedTasks = useCallback((value: TaskData[]) => {
     setSavedTasks(value);
@@ -24,13 +37,17 @@ const AppProvider = ({children}: Props) => {
     setSettings(value);
   }, []);
 
+  const onSetAddingForm = useCallback((value: AddingFormData | null) => {
+    setAddingFormData(value);
+  }, []);
+
   const onClearTasks = useCallback(() => {
     setSavedTasks([]);
     if (settings.autosave) {
-      saveAppDataToStorage([], settings);
+      saveAppDataToStorage({data: [], settings, addingFormData});
     }
     setCanSave(true);
-  }, [settings]);
+  }, [addingFormData, settings]);
 
   const onAddTask = useCallback(
     (newTask: NewTaskData) => {
@@ -42,13 +59,13 @@ const AppProvider = ({children}: Props) => {
       setSavedTasks(prev => {
         const saved = [...prev, newTaskWithId];
         if (settings.autosave) {
-          saveAppDataToStorage(saved, settings);
+          saveAppDataToStorage({data: saved, settings, addingFormData});
         }
         return saved;
       });
       setCanSave(true);
     },
-    [settings],
+    [addingFormData, settings],
   );
 
   const onRemoveTask = useCallback(
@@ -56,13 +73,13 @@ const AppProvider = ({children}: Props) => {
       setSavedTasks(prev => {
         const saved = prev.filter(data => data.id !== id);
         if (settings.autosave) {
-          saveAppDataToStorage(saved, settings);
+          saveAppDataToStorage({data: saved, settings, addingFormData});
         }
         return saved;
       });
       setCanSave(true);
     },
-    [settings],
+    [addingFormData, settings],
   );
 
   const onUpdateTask = useCallback(
@@ -75,13 +92,13 @@ const AppProvider = ({children}: Props) => {
           return data;
         });
         if (settings.autosave) {
-          saveAppDataToStorage(saved, settings);
+          saveAppDataToStorage({data: saved, settings, addingFormData});
         }
         return saved;
       });
       setCanSave(true);
     },
-    [settings],
+    [addingFormData, settings],
   );
 
   const onReport = useCallback(async () => {
@@ -89,9 +106,9 @@ const AppProvider = ({children}: Props) => {
   }, [savedTasks, settings.roundDuration, settings.storyPoint]);
 
   const onSave = useCallback(() => {
-    saveAppDataToStorage(savedTasks, settings);
+    saveAppDataToStorage({data: savedTasks, settings, addingFormData});
     setCanSave(false);
-  }, [savedTasks, settings]);
+  }, [addingFormData, savedTasks, settings]);
 
   const onUpdateSettings = useCallback(
     (field: keyof Settings, value: unknown) => {
@@ -100,9 +117,18 @@ const AppProvider = ({children}: Props) => {
         [field]: value,
       };
       setSettings(newSettings);
-      saveAppDataToStorage(savedTasks, newSettings);
+      saveAppDataToStorage({data: savedTasks, settings: newSettings, addingFormData});
     },
-    [savedTasks, settings],
+    [addingFormData, savedTasks, settings],
+  );
+
+  const onUpdateAddingForm = useCallback(
+    (updated: AddingFormData | null) => {
+      setAddingFormData(updated);
+      setCanSave(true);
+      onSaveAdding(updated);
+    },
+    [onSaveAdding],
   );
 
   const value = useMemo(
@@ -110,6 +136,7 @@ const AppProvider = ({children}: Props) => {
       savedTasks,
       canSave,
       settings,
+      addingFormData,
       onSetSavedTasks,
       onClearTasks,
       onAddTask,
@@ -119,11 +146,14 @@ const AppProvider = ({children}: Props) => {
       onUpdateSettings,
       onSetSettings,
       onSave,
+      onUpdateAddingForm,
+      onSetAddingForm,
     }),
     [
       savedTasks,
       canSave,
       settings,
+      addingFormData,
       onSetSavedTasks,
       onClearTasks,
       onAddTask,
@@ -133,6 +163,8 @@ const AppProvider = ({children}: Props) => {
       onUpdateSettings,
       onSetSettings,
       onSave,
+      onUpdateAddingForm,
+      onSetAddingForm,
     ],
   );
 

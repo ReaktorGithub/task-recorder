@@ -11,7 +11,7 @@ import {useAppContext} from './context/appContext.tsx';
 import {ControlPanel} from './components/ControlPanel';
 
 const App = () => {
-  const {onSetSavedTasks, onSetSettings} = useAppContext();
+  const {onSetSavedTasks, onSetSettings, onSetAddingForm} = useAppContext();
 
   useLayoutEffect(() => {
     const item = localStorage.getItem(STORAGE_KEY);
@@ -21,6 +21,7 @@ const App = () => {
       if (isAppData(saved)) {
         onSetSavedTasks(saved.data);
         onSetSettings(saved.settings);
+        onSetAddingForm(saved.addingFormData);
       }
     } catch (error) {
       console.log('Ошибка парсинга json');
@@ -28,7 +29,7 @@ const App = () => {
         console.log(error.message);
       }
     }
-  }, [onSetSavedTasks, onSetSettings]);
+  }, [onSetSavedTasks, onSetSettings, onSetAddingForm]);
 
   return (
     <RootLayout>

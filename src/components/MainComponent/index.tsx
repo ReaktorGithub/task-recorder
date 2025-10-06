@@ -1,7 +1,7 @@
 /** @format */
 
 import {Typography} from '@mui/material';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {getDurationClock} from '../../helpers/getDurationClock.ts';
 import {isBefore} from 'date-fns';
 import {
@@ -24,7 +24,13 @@ import {roundMinutesToStoryPoint} from '../../helpers/roundMinutesToStoryPoint.t
 const MainComponent = () => {
   const [isAdding, setIsAdding] = useState<boolean>(false);
 
-  const {savedTasks, settings} = useAppContext();
+  const {savedTasks, settings, addingFormData} = useAppContext();
+
+  useEffect(() => {
+    if (addingFormData) {
+      setIsAdding(true);
+    }
+  }, [addingFormData]);
 
   const handleAdd = () => {
     setIsAdding(true);

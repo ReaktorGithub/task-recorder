@@ -3,7 +3,7 @@
 import {Block, FormRow, Root, CancelRecordButton, InputsBox} from './styles.ts';
 import {Typography} from '@mui/material';
 import {AddRecordButton} from './styles.ts';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {getCurrentTime} from '../../helpers/getCurrentTime.ts';
 import {CustomTextField} from '../UI/CustomTextField';
 import {calcDuration} from '../../helpers/calcDuration.ts';
@@ -17,14 +17,42 @@ interface Props {
 }
 
 const AddForm = ({onCancel, onAdded}: Props) => {
-  const defaultTime = getCurrentTime();
+  const {onAddTask, settings, onUpdateAddingForm, addingFormData} = useAppContext();
 
-  const [hourBegin, setHourBegin] = useState<string>(String(defaultTime.hours));
-  const [minuteBegin, setMinuteBegin] = useState<string>(String(defaultTime.minutes));
-  const [taskNumber, setTaskNumber] = useState<string>('');
-  const [title, setTitle] = useState<string>('');
+  let hourDefault = '';
+  let minuteDefault = '';
+  let taskNumberDefault = '';
+  let titleDefault = '';
+  if (addingFormData) {
+    hourDefault = String(addingFormData.timeFrom.hours);
+    minuteDefault = String(addingFormData.timeFrom.minutes);
+    taskNumberDefault = addingFormData.taskNumber;
+    titleDefault = addingFormData.title;
+  } else {
+    const {hours, minutes} = getCurrentTime();
+    hourDefault = String(hours);
+    minuteDefault = String(minutes);
+  }
 
-  const {onAddTask, settings} = useAppContext();
+  const [hourBegin, setHourBegin] = useState<string>(hourDefault);
+  const [minuteBegin, setMinuteBegin] = useState<string>(minuteDefault);
+  const [taskNumber, setTaskNumber] = useState<string>(taskNumberDefault);
+  const [title, setTitle] = useState<string>(titleDefault);
+
+  useEffect(() => {
+    onUpdateAddingForm({
+      title,
+      timeFrom: {
+        hours: parseInt(hourBegin),
+        minutes: parseInt(minuteBegin),
+      },
+      taskNumber,
+    });
+
+    return () => {
+      onUpdateAddingForm(null);
+    };
+  }, [hourBegin, minuteBegin, onUpdateAddingForm, taskNumber, title]);
 
   const handleSetHourBegin = (value: string) => {
     setHourBegin(value);
@@ -51,6 +79,7 @@ const AddForm = ({onCancel, onAdded}: Props) => {
       title,
       taskNumber: taskNumber ? `${settings.prefix}-${taskNumber}` : '',
       duration: calcDuration({hours: hourBeginInt, minutes: minuteBeginInt}, currentTime),
+      continuing: null,
       collectedOn: new Date(),
     });
     onAdded();

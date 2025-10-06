@@ -1,6 +1,6 @@
 /** @format */
 import type {TaskData} from '../../types.ts';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {RowEdit} from './RowEdit.tsx';
 import {RowDisplay} from './RowDisplay.tsx';
 import {RowContinuing} from './RowContinuing.tsx';
@@ -16,6 +16,12 @@ const TaskRow = ({data, onClear}: Props) => {
   const [isContinuing, setIsContinuing] = useState<boolean>(false);
 
   const {onUpdateTask} = useAppContext();
+
+  useEffect(() => {
+    if (data.continuing) {
+      setIsContinuing(true);
+    }
+  }, [data.continuing]);
 
   const startEdit = () => {
     setIsEdit(true);

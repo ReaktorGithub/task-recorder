@@ -1,13 +1,9 @@
 /** @format */
 
-import type {AppData, Settings, TaskData} from '../types.ts';
+import type {AppData} from '../types.ts';
 import {STORAGE_KEY} from '../constants.ts';
 
-const saveAppDataToStorage = (savedTasks: TaskData[], settings: Settings) => {
-  const dataToSave: AppData = {
-    data: savedTasks,
-    settings,
-  };
+const saveAppDataToStorage = (dataToSave: AppData) => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
 };
 

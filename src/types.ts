@@ -10,6 +10,7 @@ export type TaskData = {
   taskNumber: string;
   title: string;
   duration: number;
+  continuing: Time | null;
   collectedOn: Date;
 };
 
@@ -22,7 +23,14 @@ export type Settings = {
   storyPoint: number;
 };
 
+export type AddingFormData = {
+  timeFrom: Time;
+  taskNumber: string;
+  title: string;
+};
+
 export type AppData = {
   data: TaskData[];
   settings: Settings;
+  addingFormData: AddingFormData | null;
 };
