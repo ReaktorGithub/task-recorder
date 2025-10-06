@@ -141,3 +141,21 @@ export const EditTitleBox = styled(Box)(({theme}) => ({
   gridTemplateColumns: '120px 1fr',
   gap: theme.spacing(2),
 }));
+
+export const AddButton = styled(Button)(() => ({
+  borderRadius: '14px',
+  width: '40px',
+  height: '30px',
+  background: '#cb5900',
+  minWidth: 'unset',
+
+  '.MuiSvgIcon-root': {
+    path: {
+      fill: '#fff',
+    },
+  },
+
+  '&:hover': {
+    background: '#ff7700',
+  },
+}));

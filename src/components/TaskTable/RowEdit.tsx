@@ -60,8 +60,7 @@ const RowEdit = ({data, onCancelEdit, onConfirmEdit}: Props) => {
           }}
         />
       </CustomTableCell>
-      <CustomTableCell>{getTimeClock(timeFrom)}</CustomTableCell>
-      <CustomTableCell>{getTimeClock(timeTo)}</CustomTableCell>
+      <CustomTableCell>+</CustomTableCell>
       <CustomTableCell>
         <ConfirmEditButton onClick={handleConfirm} title='Подтвердить изменения'>
           <CheckCircleOutline />

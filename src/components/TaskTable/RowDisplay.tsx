@@ -5,8 +5,8 @@ import {getTaskDescription} from '../../helpers/getTaskDescription.ts';
 import {getDurationClock} from '../../helpers/getDurationClock.ts';
 import {getMaybeRoundedDuration} from '../../helpers/getMaybeRoundedDuration.ts';
 import {getTimeClock} from '../../helpers/getTimeClock.ts';
-import {EditButton, ResetButton} from './styles.ts';
-import {Clear, Edit} from '@mui/icons-material';
+import {AddButton, EditButton, ResetButton} from './styles.ts';
+import {AddRounded, Clear, Edit} from '@mui/icons-material';
 import {TableRow} from '@mui/material';
 import type {TaskData} from '../../types.ts';
 import {useAppContext} from '../../context/appContext.tsx';
@@ -15,9 +15,10 @@ interface Props {
   data: TaskData;
   onClear: (id: string) => void;
   onStartEdit: () => void;
+  onStartContinuing: () => void;
 }
 
-const RowDisplay = ({data, onClear, onStartEdit}: Props) => {
+const RowDisplay = ({data, onClear, onStartEdit, onStartContinuing}: Props) => {
   const {id, title, taskNumber, duration, timeTo, timeFrom} = data;
   const {settings} = useAppContext();
 
@@ -33,8 +34,11 @@ const RowDisplay = ({data, onClear, onStartEdit}: Props) => {
           getMaybeRoundedDuration(duration, settings.storyPoint, settings.roundDuration),
         )}
       </CustomTableCell>
-      <CustomTableCell>{getTimeClock(timeFrom)}</CustomTableCell>
-      <CustomTableCell>{getTimeClock(timeTo)}</CustomTableCell>
+      <CustomTableCell>
+        <AddButton onClick={onStartContinuing} title='Продлить задачу'>
+          <AddRounded />
+        </AddButton>
+      </CustomTableCell>
       <CustomTableCell>
         <EditButton disableRipple onClick={onStartEdit} title='Изменить задачу'>
           <Edit />

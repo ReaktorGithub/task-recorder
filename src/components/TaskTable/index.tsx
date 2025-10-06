@@ -64,8 +64,7 @@ const TaskTable = ({taskData}: Props) => {
           <TableRow>
             <CustomTableHeadCell>Описание</CustomTableHeadCell>
             <CustomTableHeadCell width='130px'>Длительность</CustomTableHeadCell>
-            <CustomTableHeadCell width='60px'>Начато</CustomTableHeadCell>
-            <CustomTableHeadCell width='90px'>Завершено</CustomTableHeadCell>
+            <CustomTableHeadCell width='60px'>Продлить</CustomTableHeadCell>
             <CustomTableHeadCell width='32px' />
             <CustomTableHeadCell width='32px'>
               {taskData.length > 0 && (

@@ -12,6 +12,7 @@ interface Props {
 
 const TaskRow = ({data, onClear, onConfirm}: Props) => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [isContinuing, setIsContinuing] = useState<boolean>(false);
 
   const startEdit = () => {
     setIsEdit(true);
@@ -19,6 +20,14 @@ const TaskRow = ({data, onClear, onConfirm}: Props) => {
 
   const stopEdit = () => {
     setIsEdit(false);
+  };
+
+  const startContinuing = () => {
+    setIsContinuing(true);
+  };
+
+  const stopContinuing = () => {
+    setIsContinuing(false);
   };
 
   const handleConfirmEdit = (newData: TaskData) => {
@@ -30,7 +39,14 @@ const TaskRow = ({data, onClear, onConfirm}: Props) => {
     return <RowEdit data={data} onCancelEdit={stopEdit} onConfirmEdit={handleConfirmEdit} />;
   }
 
-  return <RowDisplay data={data} onClear={onClear} onStartEdit={startEdit} />;
+  return (
+    <RowDisplay
+      data={data}
+      onClear={onClear}
+      onStartEdit={startEdit}
+      onStartContinuing={startContinuing}
+    />
+  );
 };
 
 export {TaskRow};
