@@ -50,11 +50,6 @@ const AddForm = ({onCancel, onAdded}: Props) => {
     onAddTask({
       title,
       taskNumber: taskNumber ? `${settings.prefix}-${taskNumber}` : '',
-      timeFrom: {
-        hours: hourBeginInt,
-        minutes: minuteBeginInt,
-      },
-      timeTo: currentTime,
       duration: calcDuration({hours: hourBeginInt, minutes: minuteBeginInt}, currentTime),
       collectedOn: new Date(),
     });

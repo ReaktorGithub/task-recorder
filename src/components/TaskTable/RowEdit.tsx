@@ -3,7 +3,6 @@
 import type {TaskData} from '../../types.ts';
 import {TableRow} from '@mui/material';
 import {CustomTableCell} from '../UI/Table/CustomTableCell';
-import {getTimeClock} from '../../helpers/getTimeClock.ts';
 import {CancelEditButton, ConfirmEditButton, EditTitleBox} from './styles.ts';
 import {CheckCircleOutline, Close} from '@mui/icons-material';
 import {EditTime} from '../AddForm/EditTime.tsx';
@@ -14,13 +13,13 @@ import {calcMinutesFromTime} from '../../helpers/calcMinutesFromTime.ts';
 
 interface Props {
   data: TaskData;
-  onCancelEdit: () => void;
-  onConfirmEdit: (newData: TaskData) => void;
+  onCancel: () => void;
+  onConfirm: (newData: TaskData) => void;
 }
 
-const RowEdit = ({data, onCancelEdit, onConfirmEdit}: Props) => {
+const RowEdit = ({data, onCancel, onConfirm}: Props) => {
   const [innerData, setInnerData] = useState<TaskData>(data);
-  const {title, timeTo, timeFrom, taskNumber, duration} = innerData;
+  const {title, taskNumber, duration} = innerData;
 
   const updateInnerValue = (field: keyof TaskData, value: unknown) => {
     setInnerData(prev => ({
@@ -30,7 +29,7 @@ const RowEdit = ({data, onCancelEdit, onConfirmEdit}: Props) => {
   };
 
   const handleConfirm = () => {
-    onConfirmEdit(innerData);
+    onConfirm(innerData);
   };
 
   const {hours, minutes} = getTimeFromMinutes(duration);
@@ -60,15 +59,14 @@ const RowEdit = ({data, onCancelEdit, onConfirmEdit}: Props) => {
           }}
         />
       </CustomTableCell>
-      <CustomTableCell>{getTimeClock(timeFrom)}</CustomTableCell>
-      <CustomTableCell>{getTimeClock(timeTo)}</CustomTableCell>
+      <CustomTableCell />
       <CustomTableCell>
         <ConfirmEditButton onClick={handleConfirm} title='Подтвердить изменения'>
           <CheckCircleOutline />
         </ConfirmEditButton>
       </CustomTableCell>
       <CustomTableCell>
-        <CancelEditButton onClick={onCancelEdit} title='Отменить изменения'>
+        <CancelEditButton onClick={onCancel} title='Отменить изменения'>
           <Close />
         </CancelEditButton>
       </CustomTableCell>

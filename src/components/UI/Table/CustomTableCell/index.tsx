@@ -14,7 +14,7 @@ const CustomTableCell = ({children, ...props}: Props) => {
     <TableCell
       {...props}
       sx={{
-        fontSize: '16px',
+        fontSize: '18px',
         color: '#dfdfdf',
         padding: theme.spacing(1, 2),
       }}

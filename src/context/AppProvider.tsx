@@ -1,12 +1,11 @@
 /** @format */
 
 import {type ReactNode, useCallback, useMemo, useState} from 'react';
-import type {AppData, NewTaskData, Settings, TaskData} from '../types.ts';
+import type {NewTaskData, Settings, TaskData} from '../types.ts';
 import {AppContext} from './appContext.tsx';
-import {getDurationClock} from '../helpers/getDurationClock.ts';
-import {DEFAULT_SETTINGS, STORAGE_KEY} from '../constants.ts';
-import {getMaybeRoundedDuration} from '../helpers/getMaybeRoundedDuration.ts';
+import {DEFAULT_SETTINGS} from '../constants.ts';
 import {saveAppDataToStorage} from '../helpers/saveAppDataToStorage.ts';
+import {copyDataToClipboard} from '../helpers/copyDataToClipboard.ts';
 
 interface Props {
   children: ReactNode;
@@ -85,25 +84,8 @@ const AppProvider = ({children}: Props) => {
     [settings],
   );
 
-  const onReport = useCallback(() => {
-    let text = '';
-    savedTasks.forEach((data, index, arr) => {
-      if (data.taskNumber !== undefined) {
-        text += `${data.taskNumber}: `;
-      }
-      text += `${data.title} `;
-      const durationMaybeRounded = getMaybeRoundedDuration(
-        data.duration,
-        settings.storyPoint,
-        settings.roundDuration,
-      );
-      const duration = getDurationClock(durationMaybeRounded).replace('0h ', '');
-      text += duration;
-      if (index !== arr.length - 1) {
-        text += '\n';
-      }
-    });
-    navigator.clipboard.writeText(text);
+  const onReport = useCallback(async () => {
+    return copyDataToClipboard(savedTasks, settings.storyPoint, settings.roundDuration);
   }, [savedTasks, settings.roundDuration, settings.storyPoint]);
 
   const onSave = useCallback(() => {
@@ -118,11 +100,7 @@ const AppProvider = ({children}: Props) => {
         [field]: value,
       };
       setSettings(newSettings);
-      const dataToSave: AppData = {
-        data: savedTasks,
-        settings: newSettings,
-      };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
+      saveAppDataToStorage(savedTasks, newSettings);
     },
     [savedTasks, settings],
   );
