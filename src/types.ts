@@ -21,6 +21,7 @@ export type Settings = {
   roundDuration: boolean;
   prefix: string;
   storyPoint: number;
+  startNewAfterDone: boolean;
 };
 
 export type AddingFormData = {

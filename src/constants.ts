@@ -10,4 +10,5 @@ export const DEFAULT_SETTINGS: Settings = {
   roundDuration: false,
   prefix: 'AS',
   storyPoint: 10,
+  startNewAfterDone: false,
 };

@@ -9,9 +9,10 @@ import {useAppContext} from '../../context/appContext.tsx';
 interface Props {
   data: TaskData;
   onClear: (id: string) => void;
+  onConfirmContinuing: () => void;
 }
 
-const TaskRow = ({data, onClear}: Props) => {
+const TaskRow = ({data, onClear, onConfirmContinuing}: Props) => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [isContinuing, setIsContinuing] = useState<boolean>(false);
 
@@ -43,6 +44,7 @@ const TaskRow = ({data, onClear}: Props) => {
     onUpdateTask(newData);
     setIsEdit(false);
     setIsContinuing(false);
+    onConfirmContinuing();
   };
 
   if (isContinuing) {

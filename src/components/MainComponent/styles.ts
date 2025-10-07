@@ -8,8 +8,10 @@ export const Root = styled(Box)(({theme}) => ({
   gap: theme.spacing(3),
 }));
 
-export const StatsBox = styled(Box)(() => ({
-  width: '100%',
+export const StatsBox = styled(Box)(({theme}) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.spacing(1),
 }));
 
 export const AddButtonBox = styled(Box)(() => ({
@@ -35,14 +37,21 @@ export const AddButton = styled(Button)(() => ({
   },
 }));
 
-export const WorkTimeText = styled(Typography)(() => ({
-  span: {
-    fontWeight: 'bold',
-  },
-}));
+interface WorkTimeTextProps {
+  isOverwork?: boolean;
+}
 
-export const OverworkText = styled(Typography)(() => ({
-  color: '#ff3c3c',
+export const WorkTimeText = styled(Typography, {
+  shouldForwardProp: prop => prop !== 'isOverwork',
+})<WorkTimeTextProps>(({isOverwork}) => ({
+  fontSize: '18px',
+  fontWeight: 'bold',
+  color: isOverwork ? '#ff3c3c' : '#dfdfdf',
+
+  span: {
+    fontWeight: 400,
+    color: '#dfdfdf',
+  },
 }));
 
 export const EmptyBox = styled(Box)(() => ({

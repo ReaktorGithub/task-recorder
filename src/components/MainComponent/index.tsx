@@ -4,15 +4,7 @@ import {Typography} from '@mui/material';
 import {useEffect, useState} from 'react';
 import {getDurationClock} from '../../helpers/getDurationClock.ts';
 import {isBefore} from 'date-fns';
-import {
-  AddButton,
-  AddButtonBox,
-  EmptyBox,
-  OverworkText,
-  Root,
-  StatsBox,
-  WorkTimeText,
-} from './styles.ts';
+import {AddButton, AddButtonBox, EmptyBox, Root, StatsBox, WorkTimeText} from './styles.ts';
 import {AddRounded} from '@mui/icons-material';
 import {AddForm} from '../AddForm';
 import {calcTotalWorkTime} from '../../helpers/calcTotalWorkTime.ts';
@@ -20,6 +12,8 @@ import {TOTAL_WORK_TIME_MINUTES} from '../../constants.ts';
 import {useAppContext} from '../../context/appContext.tsx';
 import {TaskTable} from '../TaskTable';
 import {roundMinutesToStoryPoint} from '../../helpers/roundMinutesToStoryPoint.ts';
+import {getCurrentTime} from '../../helpers/getCurrentTime.ts';
+import {addMinutesToTime} from '../../helpers/addMinutesToTime.ts';
 
 const MainComponent = () => {
   const [isAdding, setIsAdding] = useState<boolean>(false);
@@ -51,6 +45,14 @@ const MainComponent = () => {
     ? roundMinutesToStoryPoint(totalWorkTimeFact, settings.storyPoint)
     : totalWorkTimeFact;
   const restTime = TOTAL_WORK_TIME_MINUTES - totalWorkTime;
+  const isOverwork = restTime < 0;
+  const targetTime = addMinutesToTime(getCurrentTime(), restTime);
+
+  const handleConfirmContinuing = () => {
+    if (settings.startNewAfterDone) {
+      setIsAdding(true);
+    }
+  };
 
   return (
     <Root>
@@ -58,13 +60,24 @@ const MainComponent = () => {
         <WorkTimeText>
           <span>Всего отработано:</span> {getDurationClock(totalWorkTime)}
         </WorkTimeText>
-        <WorkTimeText>
-          <span>До конца рабочего дня:</span> {getDurationClock(restTime)}
-        </WorkTimeText>
-        {restTime < 0 && <OverworkText>Хватит работать!</OverworkText>}
+        {isOverwork ? (
+          <WorkTimeText isOverwork>
+            <span>Переработка:</span> {getDurationClock(Math.abs(restTime))}
+          </WorkTimeText>
+        ) : (
+          <WorkTimeText>
+            <span>Осталось отработать:</span> {getDurationClock(restTime)}
+          </WorkTimeText>
+        )}
+
+        {!isOverwork && (
+          <WorkTimeText>
+            <span>Закончить в</span> {targetTime.hours}:{targetTime.minutes}
+          </WorkTimeText>
+        )}
       </StatsBox>
 
-      <TaskTable taskData={sortedData} />
+      <TaskTable taskData={sortedData} onConfirmContinuing={handleConfirmContinuing} />
 
       {sortedData.length === 0 && (
         <EmptyBox>

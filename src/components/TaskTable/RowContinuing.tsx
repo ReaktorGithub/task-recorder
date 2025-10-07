@@ -5,7 +5,6 @@ import {TableRow, Typography} from '@mui/material';
 import {CustomTableCell} from '../UI/Table/CustomTableCell';
 import {CancelEditButton, ConfirmEditButton} from './styles.ts';
 import {CheckCircleOutline, Close} from '@mui/icons-material';
-import {EditTime} from '../AddForm/EditTime.tsx';
 import {useEffect} from 'react';
 import {getTaskDescription} from '../../helpers/getTaskDescription.ts';
 import {getDurationClock} from '../../helpers/getDurationClock.ts';
@@ -13,6 +12,7 @@ import {getMaybeRoundedDuration} from '../../helpers/getMaybeRoundedDuration.ts'
 import {useAppContext} from '../../context/appContext.tsx';
 import {calcDuration} from '../../helpers/calcDuration.ts';
 import {getCurrentTime} from '../../helpers/getCurrentTime.ts';
+import {EditTime} from '../EditTime';
 
 interface Props {
   data: TaskData;
@@ -63,7 +63,7 @@ const RowContinuing = ({data, onCancel, onConfirm}: Props) => {
   const handleConfirm = () => {
     const currentTime = getCurrentTime();
     if (!data.continuing) {
-      throw new Error('На момент сохранения данные должны быть записаны внутри объекта continuing');
+      throw new Error('На момент сохранения объект continuing не должен быть null.');
     }
     const hours = data.continuing.hours;
     const minutes = data.continuing.hours;

@@ -21,9 +21,10 @@ import {TaskRow} from './TaskRow.tsx';
 
 interface Props {
   taskData: TaskData[];
+  onConfirmContinuing: () => void;
 }
 
-const TaskTable = ({taskData}: Props) => {
+const TaskTable = ({taskData, onConfirmContinuing}: Props) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [taskToRemoveId, setTaskToRemoveId] = useState<string | null>(null);
 
@@ -81,7 +82,12 @@ const TaskTable = ({taskData}: Props) => {
         </CustomTableHead>
         <TableBody>
           {taskData.map(data => (
-            <TaskRow key={data.id} data={data} onClear={handleClear} />
+            <TaskRow
+              key={data.id}
+              data={data}
+              onClear={handleClear}
+              onConfirmContinuing={onConfirmContinuing}
+            />
           ))}
         </TableBody>
       </Table>

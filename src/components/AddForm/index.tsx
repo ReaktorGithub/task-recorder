@@ -8,8 +8,8 @@ import {getCurrentTime} from '../../helpers/getCurrentTime.ts';
 import {CustomTextField} from '../UI/CustomTextField';
 import {calcDuration} from '../../helpers/calcDuration.ts';
 import {useAppContext} from '../../context/appContext.tsx';
-import {EditTime} from './EditTime.tsx';
 import {CustomNumberField} from '../UI/CustomNumberField';
+import {EditTime} from '../EditTime';
 
 interface Props {
   onCancel: () => void;
@@ -82,7 +82,16 @@ const AddForm = ({onCancel, onAdded}: Props) => {
       continuing: null,
       collectedOn: new Date(),
     });
-    onAdded();
+
+    if (settings.startNewAfterDone) {
+      const {hours, minutes} = getCurrentTime();
+      setHourBegin(String(hours));
+      setMinuteBegin(String(minutes));
+      setTitle('');
+      setTaskNumber('');
+    } else {
+      onAdded();
+    }
   };
 
   return (

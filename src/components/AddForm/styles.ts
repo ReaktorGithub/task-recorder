@@ -1,6 +1,6 @@
 /** @format */
 
-import {Box, Button, styled, Typography} from '@mui/material';
+import {Box, Button, styled} from '@mui/material';
 
 export const Root = styled(Box)(({theme}) => ({
   display: 'flex',
@@ -51,9 +51,4 @@ export const InputsBox = styled(Box)(({theme}) => ({
   display: 'flex',
   alignItems: 'center',
   gap: theme.spacing(1),
-}));
-
-export const DividerText = styled(Typography)(() => ({
-  fontSize: '22px',
-  fontWeight: 'bold',
 }));

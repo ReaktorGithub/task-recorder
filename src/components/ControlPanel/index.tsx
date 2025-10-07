@@ -1,7 +1,8 @@
 /** @format */
 import {
   CloseButton,
-  ControlButtonsBox,
+  ControlButtons,
+  ControlButtonsBlock,
   ControllerBox,
   DescriptionText,
   MenuBox,
@@ -10,12 +11,13 @@ import {
   MenuText,
   ReportButton,
   Root,
+  RoundBox,
   SaveButton,
 } from './styles.ts';
 import {Close, ContentCopy, Menu, Save} from '@mui/icons-material';
 import {useAppContext} from '../../context/appContext.tsx';
 import {type ChangeEvent, useState} from 'react';
-import {Drawer, Switch} from '@mui/material';
+import {Drawer, Switch, Typography} from '@mui/material';
 import {CustomTextField} from '../UI/CustomTextField';
 import {CustomNumberField} from '../UI/CustomNumberField';
 
@@ -48,21 +50,34 @@ const ControlPanel = () => {
     onUpdateSettings('autosave', checked);
   };
 
+  const handleUpdateStartNew = (_: ChangeEvent<HTMLInputElement>, checked: boolean) => {
+    onUpdateSettings('startNewAfterDone', checked);
+  };
+
   return (
     <Root>
-      <ControlButtonsBox>
-        <MenuButton disableRipple onClick={handleOpenMenu}>
-          <Menu fontSize='large' />
-        </MenuButton>
-        {!settings.autosave && (
-          <SaveButton onClick={onSave} disabled={!canSave}>
-            <Save /> Сохранить
-          </SaveButton>
-        )}
-        <ReportButton onClick={onReport} title='Копировать отчёт в буфер обмена'>
-          <ContentCopy />
-        </ReportButton>
-      </ControlButtonsBox>
+      <ControlButtons>
+        <ControlButtonsBlock>
+          <MenuButton disableRipple onClick={handleOpenMenu}>
+            <Menu fontSize='large' />
+          </MenuButton>
+          {!settings.autosave && (
+            <SaveButton onClick={onSave} disabled={!canSave}>
+              <Save /> Сохранить
+            </SaveButton>
+          )}
+          <ReportButton onClick={onReport} title='Копировать отчёт в буфер обмена'>
+            <ContentCopy />
+          </ReportButton>
+        </ControlButtonsBlock>
+
+        <ControlButtonsBlock>
+          <RoundBox>
+            <Typography>Округлить до {settings.storyPoint}m</Typography>
+            <Switch checked={settings.roundDuration} onChange={handleUpdateRoundDuration} />
+          </RoundBox>
+        </ControlButtonsBlock>
+      </ControlButtons>
 
       <Drawer open={openMenu} onClose={handleCloseMenu}>
         <MenuBox>
@@ -96,6 +111,13 @@ const ControlPanel = () => {
             Колонка "Длительность" в таблице будет визуально округлена до сторипойнта. Также
             округление отразится в отчётах.
           </DescriptionText>
+
+          <MenuItem>
+            <MenuText>Начать новую задачу после записи или продления</MenuText>
+            <ControllerBox>
+              <Switch checked={settings.startNewAfterDone} onChange={handleUpdateStartNew} />
+            </ControllerBox>
+          </MenuItem>
 
           <MenuItem>
             <MenuText>Автосохранение</MenuText>

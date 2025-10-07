@@ -5,7 +5,7 @@ import {TableRow} from '@mui/material';
 import {CustomTableCell} from '../UI/Table/CustomTableCell';
 import {CancelEditButton, ConfirmEditButton, EditTitleBox} from './styles.ts';
 import {CheckCircleOutline, Close} from '@mui/icons-material';
-import {EditTime} from '../AddForm/EditTime.tsx';
+import {EditTime} from '../EditTime';
 import {CustomTextField} from '../UI/CustomTextField';
 import {useState} from 'react';
 import {getTimeFromMinutes} from '../../helpers/getTimeFromMinutes.ts';
