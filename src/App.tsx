@@ -9,9 +9,11 @@ import {STORAGE_KEY} from './constants.ts';
 import {isAppData} from './helpers/isAppData.ts';
 import {useAppContext} from './context/appContext.tsx';
 import {ControlPanel} from './components/ControlPanel';
+import {Box} from '@mui/material';
+import {Report} from './components/Report';
 
 const App = () => {
-  const {onSetSavedTasks, onSetSettings, onSetAddingForm} = useAppContext();
+  const {onSetSavedTasks, onSetSettings, onSetAddingForm, onSetReports} = useAppContext();
 
   useLayoutEffect(() => {
     const item = localStorage.getItem(STORAGE_KEY);
@@ -22,6 +24,7 @@ const App = () => {
         onSetSavedTasks(saved.data);
         onSetSettings(saved.settings);
         onSetAddingForm(saved.addingFormData);
+        onSetReports(saved.reports);
       }
     } catch (error) {
       console.log('Ошибка парсинга json');
@@ -29,14 +32,17 @@ const App = () => {
         console.log(error.message);
       }
     }
-  }, [onSetSavedTasks, onSetSettings, onSetAddingForm]);
+  }, [onSetSavedTasks, onSetSettings, onSetAddingForm, onSetReports]);
 
   return (
     <RootLayout>
+      <Header />
       <ContentLayout>
-        <Header />
-        <ControlPanel />
-        <MainComponent />
+        <Box>
+          <ControlPanel />
+          <MainComponent />
+        </Box>
+        <Report />
       </ContentLayout>
     </RootLayout>
   );

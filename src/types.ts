@@ -30,8 +30,15 @@ export type AddingFormData = {
   title: string;
 };
 
+export type DayReport = {
+  id: string;
+  collectedOn: Date;
+  report: string;
+};
+
 export type AppData = {
   data: TaskData[];
   settings: Settings;
   addingFormData: AddingFormData | null;
+  reports: DayReport[];
 };

@@ -1,13 +1,14 @@
 /** @format */
 
 import {createContext, useContext} from 'react';
-import type {AddingFormData, NewTaskData, Settings, TaskData} from '../types.ts';
+import type {AddingFormData, DayReport, NewTaskData, Settings, TaskData} from '../types.ts';
 import {DEFAULT_SETTINGS} from '../constants.ts';
 
 export interface AppContextState {
   savedTasks: TaskData[];
   canSave: boolean;
   settings: Settings;
+  reports: DayReport[];
   addingFormData: AddingFormData | null;
   onSetSavedTasks: (value: TaskData[]) => void;
   onClearTasks: () => void;
@@ -20,6 +21,8 @@ export interface AppContextState {
   onUpdateSettings: (field: keyof Settings, value: unknown) => void;
   onUpdateAddingForm: (value: AddingFormData | null) => void;
   onSetAddingForm: (value: AddingFormData | null) => void;
+  onSetReports: (value: DayReport[]) => void;
+  onAddReport: () => void;
 }
 
 export const appContextInitial: AppContextState = {
@@ -27,6 +30,7 @@ export const appContextInitial: AppContextState = {
   canSave: false,
   settings: DEFAULT_SETTINGS,
   addingFormData: null,
+  reports: [],
   onSetSavedTasks: () => undefined,
   onClearTasks: () => undefined,
   onAddTask: () => undefined,
@@ -38,6 +42,8 @@ export const appContextInitial: AppContextState = {
   onSetSettings: () => undefined,
   onUpdateAddingForm: () => undefined,
   onSetAddingForm: () => undefined,
+  onSetReports: () => undefined,
+  onAddReport: () => undefined,
 };
 
 export const AppContext = createContext<AppContextState>(appContextInitial);

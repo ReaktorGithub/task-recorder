@@ -75,6 +75,22 @@ export const SaveButton = styled(Button)(({theme}) => ({
   },
 }));
 
+export const CloseDayButton = styled(Button)(({theme}) => ({
+  height: '40px',
+  borderRadius: '8px',
+  background: '#cb5900',
+  color: '#dfdfdf',
+  textTransform: 'none',
+  flexShrink: 0,
+  gap: theme.spacing(1),
+  padding: theme.spacing(0, 2),
+  fontSize: '16px',
+
+  '&:hover': {
+    background: '#e67014',
+  },
+}));
+
 export const MenuBox = styled(Box)(({theme}) => ({
   padding: theme.spacing(12, 6, 8, 6),
   width: '500px',

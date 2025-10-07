@@ -1,6 +1,7 @@
 /** @format */
 import {
   CloseButton,
+  CloseDayButton,
   ControlButtons,
   ControlButtonsBlock,
   ControllerBox,
@@ -24,7 +25,7 @@ import {CustomNumberField} from '../UI/CustomNumberField';
 const ControlPanel = () => {
   const [openMenu, setOpenMenu] = useState<boolean>(false);
 
-  const {onSave, canSave, onReport, onUpdateSettings, settings} = useAppContext();
+  const {onSave, canSave, onReport, onUpdateSettings, settings, onAddReport} = useAppContext();
 
   const handleOpenMenu = () => {
     setOpenMenu(true);
@@ -69,6 +70,7 @@ const ControlPanel = () => {
           <ReportButton onClick={onReport} title='Копировать отчёт в буфер обмена'>
             <ContentCopy />
           </ReportButton>
+          <CloseDayButton onClick={onAddReport}>Закончить день</CloseDayButton>
         </ControlButtonsBlock>
 
         <ControlButtonsBlock>

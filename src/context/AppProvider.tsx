@@ -1,12 +1,13 @@
 /** @format */
 
 import {type ReactNode, useCallback, useMemo, useState} from 'react';
-import type {AddingFormData, NewTaskData, Settings, TaskData} from '../types.ts';
+import type {AddingFormData, DayReport, NewTaskData, Settings, TaskData} from '../types.ts';
 import {AppContext} from './appContext.tsx';
 import {DEFAULT_SETTINGS} from '../constants.ts';
 import {saveAppDataToStorage} from '../helpers/saveAppDataToStorage.ts';
 import {copyDataToClipboard} from '../helpers/copyDataToClipboard.ts';
 import {useDebounce} from '../helpers/useDebounce.ts';
+import {getDayReport} from '../helpers/getDayReport.ts';
 
 interface Props {
   children: ReactNode;
@@ -17,17 +18,22 @@ const AppProvider = ({children}: Props) => {
   const [savedTasks, setSavedTasks] = useState<TaskData[]>([]);
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
   const [addingFormData, setAddingFormData] = useState<AddingFormData | null>(null);
+  const [reports, setReports] = useState<DayReport[]>([]);
 
   const debounceSaveAddingToStorage = useCallback(
     (updated: AddingFormData | null) => {
       if (settings.autosave) {
-        saveAppDataToStorage({data: savedTasks, settings, addingFormData: updated});
+        saveAppDataToStorage({data: savedTasks, settings, addingFormData: updated, reports});
       }
     },
-    [savedTasks, settings],
+    [reports, savedTasks, settings],
   );
 
   const {onChange: onSaveAdding} = useDebounce(debounceSaveAddingToStorage, 600);
+
+  const onSetReports = useCallback((value: DayReport[]) => {
+    setReports(value);
+  }, []);
 
   const onSetSavedTasks = useCallback((value: TaskData[]) => {
     setSavedTasks(value);
@@ -44,10 +50,10 @@ const AppProvider = ({children}: Props) => {
   const onClearTasks = useCallback(() => {
     setSavedTasks([]);
     if (settings.autosave) {
-      saveAppDataToStorage({data: [], settings, addingFormData});
+      saveAppDataToStorage({data: [], settings, addingFormData, reports});
     }
     setCanSave(true);
-  }, [addingFormData, settings]);
+  }, [addingFormData, reports, settings]);
 
   const onAddTask = useCallback(
     (newTask: NewTaskData) => {
@@ -59,13 +65,13 @@ const AppProvider = ({children}: Props) => {
       setSavedTasks(prev => {
         const saved = [...prev, newTaskWithId];
         if (settings.autosave) {
-          saveAppDataToStorage({data: saved, settings, addingFormData});
+          saveAppDataToStorage({data: saved, settings, addingFormData, reports});
         }
         return saved;
       });
       setCanSave(true);
     },
-    [addingFormData, settings],
+    [addingFormData, reports, settings],
   );
 
   const onRemoveTask = useCallback(
@@ -73,13 +79,13 @@ const AppProvider = ({children}: Props) => {
       setSavedTasks(prev => {
         const saved = prev.filter(data => data.id !== id);
         if (settings.autosave) {
-          saveAppDataToStorage({data: saved, settings, addingFormData});
+          saveAppDataToStorage({data: saved, settings, addingFormData, reports});
         }
         return saved;
       });
       setCanSave(true);
     },
-    [addingFormData, settings],
+    [addingFormData, reports, settings],
   );
 
   const onUpdateTask = useCallback(
@@ -92,13 +98,13 @@ const AppProvider = ({children}: Props) => {
           return data;
         });
         if (settings.autosave) {
-          saveAppDataToStorage({data: saved, settings, addingFormData});
+          saveAppDataToStorage({data: saved, settings, addingFormData, reports});
         }
         return saved;
       });
       setCanSave(true);
     },
-    [addingFormData, settings],
+    [addingFormData, reports, settings],
   );
 
   const onReport = useCallback(async () => {
@@ -106,9 +112,9 @@ const AppProvider = ({children}: Props) => {
   }, [savedTasks, settings.roundDuration, settings.storyPoint]);
 
   const onSave = useCallback(() => {
-    saveAppDataToStorage({data: savedTasks, settings, addingFormData});
+    saveAppDataToStorage({data: savedTasks, settings, addingFormData, reports});
     setCanSave(false);
-  }, [addingFormData, savedTasks, settings]);
+  }, [addingFormData, reports, savedTasks, settings]);
 
   const onUpdateSettings = useCallback(
     (field: keyof Settings, value: unknown) => {
@@ -117,9 +123,9 @@ const AppProvider = ({children}: Props) => {
         [field]: value,
       };
       setSettings(newSettings);
-      saveAppDataToStorage({data: savedTasks, settings: newSettings, addingFormData});
+      saveAppDataToStorage({data: savedTasks, settings: newSettings, addingFormData, reports});
     },
-    [addingFormData, savedTasks, settings],
+    [addingFormData, reports, savedTasks, settings],
   );
 
   const onUpdateAddingForm = useCallback(
@@ -131,11 +137,32 @@ const AppProvider = ({children}: Props) => {
     [onSaveAdding],
   );
 
+  const onAddReport = useCallback(() => {
+    const {storyPoint, roundDuration, autosave} = settings;
+    const report = getDayReport(savedTasks, storyPoint, roundDuration);
+    const id = String(new Date().getTime());
+    const newReport: DayReport = {
+      id,
+      report,
+      collectedOn: new Date(),
+    };
+    setReports(prev => {
+      const newReportsState = [...prev, newReport];
+      if (autosave) {
+        saveAppDataToStorage({data: [], settings, addingFormData: null, reports: newReportsState});
+      }
+      return newReportsState;
+    });
+    setSavedTasks([]);
+    setAddingFormData(null);
+  }, [savedTasks, settings]);
+
   const value = useMemo(
     () => ({
       savedTasks,
       canSave,
       settings,
+      reports,
       addingFormData,
       onSetSavedTasks,
       onClearTasks,
@@ -148,11 +175,14 @@ const AppProvider = ({children}: Props) => {
       onSave,
       onUpdateAddingForm,
       onSetAddingForm,
+      onSetReports,
+      onAddReport,
     }),
     [
       savedTasks,
       canSave,
       settings,
+      reports,
       addingFormData,
       onSetSavedTasks,
       onClearTasks,
@@ -165,6 +195,8 @@ const AppProvider = ({children}: Props) => {
       onSave,
       onUpdateAddingForm,
       onSetAddingForm,
+      onSetReports,
+      onAddReport,
     ],
   );
 

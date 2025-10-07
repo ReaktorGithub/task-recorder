@@ -13,9 +13,13 @@ const RootLayout = ({children}: Props) => {
   return (
     <Box
       sx={{
+        height: '100%',
+        margin: '0 auto',
+        maxWidth: '1400px',
         padding: theme.spacing(0, 4),
-        display: 'flex',
-        justifyContent: 'center',
+        display: 'grid',
+        gridTemplateColumns: '1fr',
+        gridTemplateRows: '72px 1fr',
       }}
     >
       {children}
