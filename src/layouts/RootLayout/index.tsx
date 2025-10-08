@@ -15,7 +15,7 @@ const RootLayout = ({children}: Props) => {
       sx={{
         height: '100%',
         margin: '0 auto',
-        maxWidth: '1400px',
+        maxWidth: '1200px',
         padding: theme.spacing(0, 4),
         display: 'grid',
         gridTemplateColumns: '1fr',

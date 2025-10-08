@@ -89,6 +89,11 @@ export const CloseDayButton = styled(Button)(({theme}) => ({
   '&:hover': {
     background: '#e67014',
   },
+
+  '&.Mui-disabled': {
+    background: '#3a3330',
+    color: '#6c6c6c',
+  },
 }));
 
 export const MenuBox = styled(Box)(({theme}) => ({

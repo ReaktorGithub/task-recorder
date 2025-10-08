@@ -3,21 +3,14 @@
 import {CustomTableHead} from '../UI/Table/CustomTableHead';
 import {Modal, Table, TableBody, TableRow} from '@mui/material';
 import {CustomTableHeadCell} from '../UI/Table/CustomTableHeadCell';
-import {getTaskDescription} from '../../helpers/getTaskDescription.ts';
 import type {TaskData} from '../../types.ts';
 import {useAppContext} from '../../context/appContext.tsx';
-import {Clear, Close} from '@mui/icons-material';
-import {
-  ButtonsBox,
-  CancelButton,
-  CloseButton,
-  ConfirmButton,
-  ModalContent,
-  ModalText,
-  ResetButton,
-} from './styles.ts';
+import {Clear} from '@mui/icons-material';
+import {ResetButton} from './styles.ts';
 import {useState} from 'react';
 import {TaskRow} from './TaskRow.tsx';
+import {ModalContent} from '../modals/ModalRemove';
+import {getTaskDescription} from '../../helpers/getTaskDescription.ts';
 
 interface Props {
   taskData: TaskData[];
@@ -43,12 +36,6 @@ const TaskTable = ({taskData, onConfirmContinuing}: Props) => {
     handleOpenModal();
   };
 
-  const getTaskToRemoveText = (id: string) => {
-    const task = savedTasks.find(task => task.id === id);
-    if (!task) return '';
-    return getTaskDescription(task.title, task.taskNumber);
-  };
-
   const handleConfirmRemove = () => {
     if (taskToRemoveId) {
       onRemoveTask(taskToRemoveId);
@@ -56,6 +43,12 @@ const TaskTable = ({taskData, onConfirmContinuing}: Props) => {
       onClearTasks();
     }
     handleCloseModal();
+  };
+
+  const getTaskToRemoveText = () => {
+    const task = savedTasks.find(task => task.id === taskToRemoveId);
+    if (!task) return '';
+    return getTaskDescription(task.title, task.taskNumber);
   };
 
   return (
@@ -93,29 +86,13 @@ const TaskTable = ({taskData, onConfirmContinuing}: Props) => {
       </Table>
 
       <Modal open={openModal} onClose={handleCloseModal}>
-        <ModalContent>
-          {taskToRemoveId ? (
-            <>
-              <ModalText>Вы действительно хотите удалить эту задачу?</ModalText>
-              <ModalText>{getTaskToRemoveText(taskToRemoveId)}</ModalText>
-              <ButtonsBox>
-                <CancelButton onClick={handleCloseModal}>Отмена</CancelButton>
-                <ConfirmButton onClick={handleConfirmRemove}>Да</ConfirmButton>
-              </ButtonsBox>
-            </>
-          ) : (
-            <>
-              <ModalText>Вы действительно хотите очистить список задач?</ModalText>
-              <ButtonsBox>
-                <CancelButton onClick={handleCloseModal}>Отмена</CancelButton>
-                <ConfirmButton onClick={handleConfirmRemove}>Да</ConfirmButton>
-              </ButtonsBox>
-            </>
-          )}
-          <CloseButton onClick={handleCloseModal}>
-            <Close />
-          </CloseButton>
-        </ModalContent>
+        <ModalContent
+          taskToRemoveId={taskToRemoveId}
+          taskToRemoveText={getTaskToRemoveText()}
+          onConfirm={handleConfirmRemove}
+          onClose={handleCloseModal}
+          question='задачу'
+        />
       </Modal>
     </>
   );

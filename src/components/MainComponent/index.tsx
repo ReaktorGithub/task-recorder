@@ -72,7 +72,8 @@ const MainComponent = () => {
 
         {!isOverwork && (
           <WorkTimeText>
-            <span>Закончить в</span> {targetTime.hours}:{targetTime.minutes}
+            <span>Закончить в</span> {targetTime.hours}:{targetTime.minutes}{' '}
+            <span>(без учёта перерывов)</span>
           </WorkTimeText>
         )}
       </StatsBox>

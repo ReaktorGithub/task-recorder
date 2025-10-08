@@ -18,14 +18,17 @@ import {
 import {Close, ContentCopy, Menu, Save} from '@mui/icons-material';
 import {useAppContext} from '../../context/appContext.tsx';
 import {type ChangeEvent, useState} from 'react';
-import {Drawer, Switch, Typography} from '@mui/material';
+import {Drawer, Modal, Switch, Typography} from '@mui/material';
 import {CustomTextField} from '../UI/CustomTextField';
 import {CustomNumberField} from '../UI/CustomNumberField';
+import {CloseDayModal} from '../modals/CloseDayModal';
 
 const ControlPanel = () => {
   const [openMenu, setOpenMenu] = useState<boolean>(false);
+  const [openModal, setOpenModal] = useState<boolean>(false);
 
-  const {onSave, canSave, onReport, onUpdateSettings, settings, onAddReport} = useAppContext();
+  const {onSave, canSave, onReport, onUpdateSettings, settings, onAddReport, savedTasks} =
+    useAppContext();
 
   const handleOpenMenu = () => {
     setOpenMenu(true);
@@ -55,6 +58,21 @@ const ControlPanel = () => {
     onUpdateSettings('startNewAfterDone', checked);
   };
 
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+
+  const handleConfirmCloseDay = () => {
+    onAddReport();
+    setOpenModal(false);
+  };
+
+  const disableCloseDay = savedTasks.length === 0;
+
   return (
     <Root>
       <ControlButtons>
@@ -70,7 +88,9 @@ const ControlPanel = () => {
           <ReportButton onClick={onReport} title='Копировать отчёт в буфер обмена'>
             <ContentCopy />
           </ReportButton>
-          <CloseDayButton onClick={onAddReport}>Закончить день</CloseDayButton>
+          <CloseDayButton disabled={disableCloseDay} onClick={handleOpenModal}>
+            Закончить день
+          </CloseDayButton>
         </ControlButtonsBlock>
 
         <ControlButtonsBlock>
@@ -138,6 +158,10 @@ const ControlPanel = () => {
           </CloseButton>
         </MenuBox>
       </Drawer>
+
+      <Modal open={openModal} onClose={handleCloseModal}>
+        <CloseDayModal onConfirm={handleConfirmCloseDay} onClose={handleCloseModal} />
+      </Modal>
     </Root>
   );
 };

@@ -108,7 +108,8 @@ const AppProvider = ({children}: Props) => {
   );
 
   const onReport = useCallback(async () => {
-    return copyDataToClipboard(savedTasks, settings.storyPoint, settings.roundDuration);
+    const report = getDayReport(savedTasks, settings.storyPoint, settings.roundDuration);
+    return copyDataToClipboard(report);
   }, [savedTasks, settings.roundDuration, settings.storyPoint]);
 
   const onSave = useCallback(() => {
@@ -157,6 +158,24 @@ const AppProvider = ({children}: Props) => {
     setAddingFormData(null);
   }, [savedTasks, settings]);
 
+  const onRemoveReport = useCallback(
+    (id: string) => {
+      setReports(prev => {
+        const newReportsState = prev.filter(report => report.id !== id);
+        if (settings.autosave) {
+          saveAppDataToStorage({
+            data: [],
+            settings,
+            addingFormData: null,
+            reports: newReportsState,
+          });
+        }
+        return newReportsState;
+      });
+    },
+    [settings],
+  );
+
   const value = useMemo(
     () => ({
       savedTasks,
@@ -177,6 +196,7 @@ const AppProvider = ({children}: Props) => {
       onSetAddingForm,
       onSetReports,
       onAddReport,
+      onRemoveReport,
     }),
     [
       savedTasks,
@@ -197,6 +217,7 @@ const AppProvider = ({children}: Props) => {
       onSetAddingForm,
       onSetReports,
       onAddReport,
+      onRemoveReport,
     ],
   );
 

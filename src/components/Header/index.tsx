@@ -1,7 +1,7 @@
 /** @format */
 
 import {Box, Typography} from '@mui/material';
-import {getTodayInfo} from '../../helpers/getTodayInfo.ts';
+import {getTodayDateString} from '../../helpers/getTodayDateString.ts';
 
 const Header = () => {
   return (
@@ -16,7 +16,7 @@ const Header = () => {
       <Typography component='h1' sx={{fontSize: '24px', fontWeight: 600}}>
         Отчет по задачам
       </Typography>
-      <Typography sx={{fontSize: '20px', fontWeight: 400}}>({getTodayInfo()})</Typography>
+      <Typography sx={{fontSize: '20px', fontWeight: 400}}>({getTodayDateString()})</Typography>
     </Box>
   );
 };

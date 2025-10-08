@@ -23,6 +23,7 @@ export interface AppContextState {
   onSetAddingForm: (value: AddingFormData | null) => void;
   onSetReports: (value: DayReport[]) => void;
   onAddReport: () => void;
+  onRemoveReport: (id: string) => void;
 }
 
 export const appContextInitial: AppContextState = {
@@ -44,6 +45,7 @@ export const appContextInitial: AppContextState = {
   onSetAddingForm: () => undefined,
   onSetReports: () => undefined,
   onAddReport: () => undefined,
+  onRemoveReport: () => undefined,
 };
 
 export const AppContext = createContext<AppContextState>(appContextInitial);
