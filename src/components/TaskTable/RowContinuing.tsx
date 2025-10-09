@@ -66,7 +66,7 @@ const RowContinuing = ({data, onCancel, onConfirm}: Props) => {
       throw new Error('На момент сохранения объект continuing не должен быть null.');
     }
     const hours = data.continuing.hours;
-    const minutes = data.continuing.hours;
+    const minutes = data.continuing.minutes;
     const durationPlus = calcDuration({hours, minutes}, currentTime);
     const newData: TaskData = {
       ...data,
