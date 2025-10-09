@@ -1,21 +1,29 @@
 /** @format */
 import type {TaskData} from '../../types.ts';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {RowEdit} from './RowEdit.tsx';
 import {RowDisplay} from './RowDisplay.tsx';
 import {RowContinuing} from './RowContinuing.tsx';
 import {useAppContext} from '../../context/appContext.tsx';
+import {useFavicon} from '../../features/useFavicon.tsx';
 
 interface Props {
   data: TaskData;
   onClear: (id: string) => void;
+  onConfirmContinuing: () => void;
 }
 
-const TaskRow = ({data, onClear}: Props) => {
+const TaskRow = ({data, onClear, onConfirmContinuing}: Props) => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
-  const [isContinuing, setIsContinuing] = useState<boolean>(false);
 
-  const {onUpdateTask} = useAppContext();
+  const {onUpdateTask, isAdding} = useAppContext();
+  const {onRecord} = useFavicon();
+
+  useEffect(() => {
+    if (data.isContinuing) {
+      onRecord(true);
+    }
+  }, [data, onRecord]);
 
   const startEdit = () => {
     setIsEdit(true);
@@ -26,20 +34,29 @@ const TaskRow = ({data, onClear}: Props) => {
   };
 
   const startContinuing = () => {
-    setIsContinuing(true);
+    onRecord(true);
+    onUpdateTask({
+      ...data,
+      isContinuing: true,
+    });
   };
 
   const stopContinuing = () => {
-    setIsContinuing(false);
+    onRecord(isAdding);
+    onUpdateTask({
+      ...data,
+      isContinuing: false,
+    });
   };
 
   const handleConfirmUpdate = (newData: TaskData) => {
     onUpdateTask(newData);
-    setIsEdit(false);
-    setIsContinuing(false);
+    stopEdit();
+    onRecord(isAdding);
+    onConfirmContinuing();
   };
 
-  if (isContinuing) {
+  if (data.isContinuing) {
     return <RowContinuing data={data} onCancel={stopContinuing} onConfirm={handleConfirmUpdate} />;
   }
 

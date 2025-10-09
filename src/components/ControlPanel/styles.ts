@@ -10,9 +10,25 @@ export const Root = styled(Box)(({theme}) => ({
   alignItems: 'center',
 }));
 
-export const ControlButtonsBox = styled(Box)(({theme}) => ({
+export const ControlButtons = styled(Box)(({theme}) => ({
+  width: '100%',
+  display: 'flex',
+  justifyContent: 'space-between',
+  gap: theme.spacing(4),
+}));
+
+export const ControlButtonsBlock = styled(Box)(({theme}) => ({
   display: 'flex',
   gap: theme.spacing(2),
+}));
+
+export const RoundBox = styled(Box)(({theme}) => ({
+  background: '#2d3539',
+  borderRadius: '8px',
+  padding: theme.spacing(1, 2),
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(1),
 }));
 
 export const MenuButton = styled(Button)(() => ({
@@ -59,9 +75,30 @@ export const SaveButton = styled(Button)(({theme}) => ({
   },
 }));
 
+export const CloseDayButton = styled(Button)(({theme}) => ({
+  height: '40px',
+  borderRadius: '8px',
+  background: '#cb5900',
+  color: '#dfdfdf',
+  textTransform: 'none',
+  flexShrink: 0,
+  gap: theme.spacing(1),
+  padding: theme.spacing(0, 2),
+  fontSize: '16px',
+
+  '&:hover': {
+    background: '#e67014',
+  },
+
+  '&.Mui-disabled': {
+    background: '#3a3330',
+    color: '#6c6c6c',
+  },
+}));
+
 export const MenuBox = styled(Box)(({theme}) => ({
   padding: theme.spacing(12, 6, 8, 6),
-  width: '400px',
+  width: '500px',
   maxWidth: '50vw',
   display: 'flex',
   flexDirection: 'column',

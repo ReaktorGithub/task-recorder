@@ -5,14 +5,14 @@ import {TableRow, Typography} from '@mui/material';
 import {CustomTableCell} from '../UI/Table/CustomTableCell';
 import {CancelEditButton, ConfirmEditButton} from './styles.ts';
 import {CheckCircleOutline, Close} from '@mui/icons-material';
-import {EditTime} from '../AddForm/EditTime.tsx';
-import {useEffect, useState} from 'react';
+import {useEffect} from 'react';
 import {getTaskDescription} from '../../helpers/getTaskDescription.ts';
 import {getDurationClock} from '../../helpers/getDurationClock.ts';
 import {getMaybeRoundedDuration} from '../../helpers/getMaybeRoundedDuration.ts';
 import {useAppContext} from '../../context/appContext.tsx';
 import {calcDuration} from '../../helpers/calcDuration.ts';
 import {getCurrentTime} from '../../helpers/getCurrentTime.ts';
+import {EditTime} from '../EditTime';
 
 interface Props {
   data: TaskData;
@@ -21,31 +21,64 @@ interface Props {
 }
 
 const RowContinuing = ({data, onCancel, onConfirm}: Props) => {
-  const [hours, setHour] = useState<string>('');
-  const [minutes, setMinute] = useState<string>('');
+  const {settings, onUpdateTask} = useAppContext();
 
   useEffect(() => {
-    const {hours: currentHour, minutes: currentMinutes} = getCurrentTime();
-    setHour(String(currentHour));
-    setMinute(String(currentMinutes));
-  }, []);
-
-  const {settings} = useAppContext();
+    if (!data.continuing) {
+      const {hours: currentHour, minutes: currentMinutes} = getCurrentTime();
+      onUpdateTask({
+        ...data,
+        continuing: {
+          hours: currentHour,
+          minutes: currentMinutes,
+        },
+      });
+    }
+  }, [data, onUpdateTask]);
 
   const {taskNumber, title, duration} = data;
 
+  const handleUpdateHour = (value: string) => {
+    const parsed = parseInt(value);
+    onUpdateTask({
+      ...data,
+      continuing: {
+        hours: parsed,
+        minutes: data.continuing?.minutes ?? 0,
+      },
+    });
+  };
+
+  const handleUpdateMinutes = (value: string) => {
+    const parsed = parseInt(value);
+    onUpdateTask({
+      ...data,
+      continuing: {
+        minutes: parsed,
+        hours: data.continuing?.hours ?? 0,
+      },
+    });
+  };
+
   const handleConfirm = () => {
     const currentTime = getCurrentTime();
-    const durationPlus = calcDuration(
-      {hours: parseInt(hours), minutes: parseInt(minutes)},
-      currentTime,
-    );
-    const newData = {
+    if (!data.continuing) {
+      throw new Error('На момент сохранения объект continuing не должен быть null.');
+    }
+    const hours = data.continuing.hours;
+    const minutes = data.continuing.minutes;
+    const durationPlus = calcDuration({hours, minutes}, currentTime);
+    const newData: TaskData = {
       ...data,
       duration: data.duration + durationPlus,
+      continuing: null,
+      isContinuing: false,
     };
     onConfirm(newData);
   };
+
+  const displayHour = String(data.continuing?.hours ?? '');
+  const displayMinutes = String(data.continuing?.minutes ?? '');
 
   return (
     <TableRow>
@@ -57,7 +90,12 @@ const RowContinuing = ({data, onCancel, onConfirm}: Props) => {
       </CustomTableCell>
       <CustomTableCell>
         <Typography>Время начала</Typography>
-        <EditTime hour={hours} minute={minutes} onChangeHour={setHour} onChangeMinute={setMinute} />
+        <EditTime
+          hour={displayHour}
+          minute={displayMinutes}
+          onChangeHour={handleUpdateHour}
+          onChangeMinute={handleUpdateMinutes}
+        />
       </CustomTableCell>
       <CustomTableCell>
         <ConfirmEditButton onClick={handleConfirm} title='Подтвердить добавление'>

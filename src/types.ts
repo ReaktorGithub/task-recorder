@@ -10,6 +10,8 @@ export type TaskData = {
   taskNumber: string;
   title: string;
   duration: number;
+  continuing: Time | null;
+  isContinuing: boolean;
   collectedOn: Date;
 };
 
@@ -20,9 +22,24 @@ export type Settings = {
   roundDuration: boolean;
   prefix: string;
   storyPoint: number;
+  startNewAfterDone: boolean;
+};
+
+export type AddingFormData = {
+  timeFrom: Time;
+  taskNumber: string;
+  title: string;
+};
+
+export type DayReport = {
+  id: string;
+  collectedOn: Date;
+  report: string;
 };
 
 export type AppData = {
   data: TaskData[];
   settings: Settings;
+  addingFormData: AddingFormData | null;
+  reports: DayReport[];
 };

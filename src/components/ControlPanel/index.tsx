@@ -1,7 +1,9 @@
 /** @format */
 import {
   CloseButton,
-  ControlButtonsBox,
+  CloseDayButton,
+  ControlButtons,
+  ControlButtonsBlock,
   ControllerBox,
   DescriptionText,
   MenuBox,
@@ -10,19 +12,23 @@ import {
   MenuText,
   ReportButton,
   Root,
+  RoundBox,
   SaveButton,
 } from './styles.ts';
 import {Close, ContentCopy, Menu, Save} from '@mui/icons-material';
 import {useAppContext} from '../../context/appContext.tsx';
 import {type ChangeEvent, useState} from 'react';
-import {Drawer, Switch} from '@mui/material';
+import {Drawer, Modal, Switch, Typography} from '@mui/material';
 import {CustomTextField} from '../UI/CustomTextField';
 import {CustomNumberField} from '../UI/CustomNumberField';
+import {CloseDayModal} from '../modals/CloseDayModal';
 
 const ControlPanel = () => {
   const [openMenu, setOpenMenu] = useState<boolean>(false);
+  const [openModal, setOpenModal] = useState<boolean>(false);
 
-  const {onSave, canSave, onReport, onUpdateSettings, settings} = useAppContext();
+  const {onSave, canSave, onReport, onUpdateSettings, settings, onAddReport, savedTasks} =
+    useAppContext();
 
   const handleOpenMenu = () => {
     setOpenMenu(true);
@@ -48,21 +54,52 @@ const ControlPanel = () => {
     onUpdateSettings('autosave', checked);
   };
 
+  // const handleUpdateStartNew = (_: ChangeEvent<HTMLInputElement>, checked: boolean) => {
+  //   onUpdateSettings('startNewAfterDone', checked);
+  // };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+
+  const handleConfirmCloseDay = () => {
+    onAddReport();
+    setOpenModal(false);
+  };
+
+  const disableCloseDay = savedTasks.length === 0;
+
   return (
     <Root>
-      <ControlButtonsBox>
-        <MenuButton disableRipple onClick={handleOpenMenu}>
-          <Menu fontSize='large' />
-        </MenuButton>
-        {!settings.autosave && (
-          <SaveButton onClick={onSave} disabled={!canSave}>
-            <Save /> Сохранить
-          </SaveButton>
-        )}
-        <ReportButton onClick={onReport} title='Копировать отчёт в буфер обмена'>
-          <ContentCopy />
-        </ReportButton>
-      </ControlButtonsBox>
+      <ControlButtons>
+        <ControlButtonsBlock>
+          <MenuButton disableRipple onClick={handleOpenMenu}>
+            <Menu fontSize='large' />
+          </MenuButton>
+          {!settings.autosave && (
+            <SaveButton onClick={onSave} disabled={!canSave}>
+              <Save /> Сохранить
+            </SaveButton>
+          )}
+          <ReportButton onClick={onReport} title='Копировать отчёт в буфер обмена'>
+            <ContentCopy />
+          </ReportButton>
+          <CloseDayButton disabled={disableCloseDay} onClick={handleOpenModal}>
+            Закончить день
+          </CloseDayButton>
+        </ControlButtonsBlock>
+
+        <ControlButtonsBlock>
+          <RoundBox>
+            <Typography>Округлить до {settings.storyPoint}m</Typography>
+            <Switch checked={settings.roundDuration} onChange={handleUpdateRoundDuration} />
+          </RoundBox>
+        </ControlButtonsBlock>
+      </ControlButtons>
 
       <Drawer open={openMenu} onClose={handleCloseMenu}>
         <MenuBox>
@@ -97,6 +134,13 @@ const ControlPanel = () => {
             округление отразится в отчётах.
           </DescriptionText>
 
+          {/*<MenuItem>*/}
+          {/*  <MenuText>Начать новую задачу после записи или продления</MenuText>*/}
+          {/*  <ControllerBox>*/}
+          {/*    <Switch checked={settings.startNewAfterDone} onChange={handleUpdateStartNew} />*/}
+          {/*  </ControllerBox>*/}
+          {/*</MenuItem>*/}
+
           <MenuItem>
             <MenuText>Автосохранение</MenuText>
             <ControllerBox>
@@ -114,6 +158,10 @@ const ControlPanel = () => {
           </CloseButton>
         </MenuBox>
       </Drawer>
+
+      <Modal open={openModal} onClose={handleCloseModal}>
+        <CloseDayModal onConfirm={handleConfirmCloseDay} onClose={handleCloseModal} />
+      </Modal>
     </Root>
   );
 };

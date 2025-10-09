@@ -13,11 +13,11 @@ const ContentLayout = ({children}: Props) => {
   return (
     <Box
       sx={{
-        maxWidth: '900px',
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: theme.spacing(2),
+        display: 'grid',
+        gridTemplateColumns: 'minmax(600px, 1fr) max-content',
+        gridTemplateRows: '1fr',
+        gap: theme.spacing(4),
+        paddingBottom: theme.spacing(4),
       }}
     >
       {children}
