@@ -11,6 +11,7 @@ export type TaskData = {
   title: string;
   duration: number;
   continuing: Time | null;
+  isContinuing: boolean;
   collectedOn: Date;
 };
 

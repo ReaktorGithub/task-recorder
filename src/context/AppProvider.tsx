@@ -15,6 +15,7 @@ interface Props {
 
 const AppProvider = ({children}: Props) => {
   const [canSave, setCanSave] = useState<boolean>(false);
+  const [isAdding, setIsAdding] = useState<boolean>(false);
   const [savedTasks, setSavedTasks] = useState<TaskData[]>([]);
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
   const [addingFormData, setAddingFormData] = useState<AddingFormData | null>(null);
@@ -176,12 +177,17 @@ const AppProvider = ({children}: Props) => {
     [settings],
   );
 
+  const onIsAdding = useCallback((value: boolean) => {
+    setIsAdding(value);
+  }, []);
+
   const value = useMemo(
     () => ({
       savedTasks,
       canSave,
       settings,
       reports,
+      isAdding,
       addingFormData,
       onSetSavedTasks,
       onClearTasks,
@@ -197,12 +203,14 @@ const AppProvider = ({children}: Props) => {
       onSetReports,
       onAddReport,
       onRemoveReport,
+      onIsAdding,
     }),
     [
       savedTasks,
       canSave,
       settings,
       reports,
+      isAdding,
       addingFormData,
       onSetSavedTasks,
       onClearTasks,
@@ -218,6 +226,7 @@ const AppProvider = ({children}: Props) => {
       onSetReports,
       onAddReport,
       onRemoveReport,
+      onIsAdding,
     ],
   );
 

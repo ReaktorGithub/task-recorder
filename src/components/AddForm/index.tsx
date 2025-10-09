@@ -84,9 +84,8 @@ const AddForm = ({onCancel, onAdded}: Props) => {
     });
 
     if (settings.startNewAfterDone) {
-      const {hours, minutes} = getCurrentTime();
-      setHourBegin(String(hours));
-      setMinuteBegin(String(minutes));
+      setHourBegin(String(currentTime.hours));
+      setMinuteBegin(String(currentTime.minutes));
       setTitle('');
       setTaskNumber('');
     } else {

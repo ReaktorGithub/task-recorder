@@ -72,6 +72,7 @@ const RowContinuing = ({data, onCancel, onConfirm}: Props) => {
       ...data,
       duration: data.duration + durationPlus,
       continuing: null,
+      isContinuing: false,
     };
     onConfirm(newData);
   };

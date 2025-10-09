@@ -9,6 +9,7 @@ export interface AppContextState {
   canSave: boolean;
   settings: Settings;
   reports: DayReport[];
+  isAdding: boolean;
   addingFormData: AddingFormData | null;
   onSetSavedTasks: (value: TaskData[]) => void;
   onClearTasks: () => void;
@@ -23,6 +24,7 @@ export interface AppContextState {
   onSetAddingForm: (value: AddingFormData | null) => void;
   onSetReports: (value: DayReport[]) => void;
   onAddReport: () => void;
+  onIsAdding: (value: boolean) => void;
   onRemoveReport: (id: string) => void;
 }
 
@@ -32,6 +34,7 @@ export const appContextInitial: AppContextState = {
   settings: DEFAULT_SETTINGS,
   addingFormData: null,
   reports: [],
+  isAdding: false,
   onSetSavedTasks: () => undefined,
   onClearTasks: () => undefined,
   onAddTask: () => undefined,
@@ -46,6 +49,7 @@ export const appContextInitial: AppContextState = {
   onSetReports: () => undefined,
   onAddReport: () => undefined,
   onRemoveReport: () => undefined,
+  onIsAdding: () => undefined,
 };
 
 export const AppContext = createContext<AppContextState>(appContextInitial);

@@ -1,7 +1,7 @@
 /** @format */
 
 import {Typography} from '@mui/material';
-import {useEffect, useState} from 'react';
+import {useEffect} from 'react';
 import {getDurationClock} from '../../helpers/getDurationClock.ts';
 import {isBefore} from 'date-fns';
 import {AddButton, AddButtonBox, EmptyBox, Root, StatsBox, WorkTimeText} from './styles.ts';
@@ -11,27 +11,31 @@ import {calcTotalWorkTime} from '../../helpers/calcTotalWorkTime.ts';
 import {TOTAL_WORK_TIME_MINUTES} from '../../constants.ts';
 import {useAppContext} from '../../context/appContext.tsx';
 import {TaskTable} from '../TaskTable';
-import {roundMinutesToStoryPoint} from '../../helpers/roundMinutesToStoryPoint.ts';
 import {getCurrentTime} from '../../helpers/getCurrentTime.ts';
 import {addMinutesToTime} from '../../helpers/addMinutesToTime.ts';
+import {calcTotalWorkTimeRounded} from '../../helpers/calcTotalWorkTimeRounded.ts';
+import {useFavicon} from '../../features/useFavicon.tsx';
 
 const MainComponent = () => {
-  const [isAdding, setIsAdding] = useState<boolean>(false);
-
-  const {savedTasks, settings, addingFormData} = useAppContext();
+  const {savedTasks, settings, addingFormData, isAdding, onIsAdding} = useAppContext();
+  const {onRecord} = useFavicon();
 
   useEffect(() => {
     if (addingFormData) {
-      setIsAdding(true);
+      onRecord(true);
+      onIsAdding(true);
     }
-  }, [addingFormData]);
+  }, [addingFormData, onIsAdding, onRecord]);
 
   const handleAdd = () => {
-    setIsAdding(true);
+    onRecord(true);
+    onIsAdding(true);
   };
 
   const handleCancel = () => {
-    setIsAdding(false);
+    const isSomeContinuing = savedTasks.some(task => task.isContinuing);
+    onRecord(isSomeContinuing);
+    onIsAdding(false);
   };
 
   const sortedData = [...savedTasks].sort((a, b) => {
@@ -40,19 +44,21 @@ const MainComponent = () => {
     return 0;
   });
 
-  const totalWorkTimeFact = calcTotalWorkTime(sortedData);
   const totalWorkTime = settings.roundDuration
-    ? roundMinutesToStoryPoint(totalWorkTimeFact, settings.storyPoint)
-    : totalWorkTimeFact;
+    ? calcTotalWorkTimeRounded(sortedData, settings.storyPoint)
+    : calcTotalWorkTime(sortedData);
   const restTime = TOTAL_WORK_TIME_MINUTES - totalWorkTime;
   const isOverwork = restTime < 0;
   const targetTime = addMinutesToTime(getCurrentTime(), restTime);
 
   const handleConfirmContinuing = () => {
     if (settings.startNewAfterDone) {
-      setIsAdding(true);
+      handleAdd();
     }
   };
+
+  const targetMinutesFormatted =
+    String(targetTime.minutes).length < 2 ? `0${targetTime.minutes}` : targetTime.minutes;
 
   return (
     <Root>
@@ -70,9 +76,9 @@ const MainComponent = () => {
           </WorkTimeText>
         )}
 
-        {!isOverwork && (
+        {!isOverwork && sortedData.length > 0 && (
           <WorkTimeText>
-            <span>Закончить в</span> {targetTime.hours}:{targetTime.minutes}{' '}
+            <span>Закончить в</span> {targetTime.hours}:{targetMinutesFormatted}{' '}
             <span>(без учёта перерывов)</span>
           </WorkTimeText>
         )}

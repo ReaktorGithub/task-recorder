@@ -54,9 +54,9 @@ const ControlPanel = () => {
     onUpdateSettings('autosave', checked);
   };
 
-  const handleUpdateStartNew = (_: ChangeEvent<HTMLInputElement>, checked: boolean) => {
-    onUpdateSettings('startNewAfterDone', checked);
-  };
+  // const handleUpdateStartNew = (_: ChangeEvent<HTMLInputElement>, checked: boolean) => {
+  //   onUpdateSettings('startNewAfterDone', checked);
+  // };
 
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -134,12 +134,12 @@ const ControlPanel = () => {
             округление отразится в отчётах.
           </DescriptionText>
 
-          <MenuItem>
-            <MenuText>Начать новую задачу после записи или продления</MenuText>
-            <ControllerBox>
-              <Switch checked={settings.startNewAfterDone} onChange={handleUpdateStartNew} />
-            </ControllerBox>
-          </MenuItem>
+          {/*<MenuItem>*/}
+          {/*  <MenuText>Начать новую задачу после записи или продления</MenuText>*/}
+          {/*  <ControllerBox>*/}
+          {/*    <Switch checked={settings.startNewAfterDone} onChange={handleUpdateStartNew} />*/}
+          {/*  </ControllerBox>*/}
+          {/*</MenuItem>*/}
 
           <MenuItem>
             <MenuText>Автосохранение</MenuText>
