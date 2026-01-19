@@ -1,85 +1,22 @@
 <!-- @format -->
 
-# React + TypeScript + Vite
+Веб-приложение для трекинга задач.
+Возможности:
+1. Ставьте время начала выполнения задачи, отмечайте её окончание.
+2. Редактируйте время для уже добавленных задач.
+3. Округлите время до вашего сторипойнта.
+4. Отслеживайте окончание рабочего времени.
+5. Настройте приложение на свой вкус с помощью гибкой системы настроек.
+6. Копируйте в буфер обмена список задач, сделанных за сегодня, и затраченное на них время.
+7. Сохраняйте дневные отчёты в "архив".
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Список изменений в новой версии:
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react)
-  uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in
-  [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc)
-  uses [SWC](https://swc.rs/) for Fast Refresh
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build
-performances. To add it, see
-[this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable
-type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
-```
-
-You can also install
-[eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x)
-and
-[eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom)
-for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
-```
+- Добавлена возможность продлевать уже записанные задачи.
+- Из таблицы удалены колонки "начало" и "завершено".
+- Новые и продлеваемые задачи теперь тоже сохраняются при перезагрузке страницы.
+- Опция округления дублирована на панель управления.
+- Переработан раздел статистики общего отработанного времени.
+- Новая кнопка: Завершить день. При завершении дня отчёт добавляется в историю, которую можно изучить в правом всплывающем блоке.
+- Добавил новую иконку для вкладки браузера.
+- Иконка красная, если идет запись (пока что работает только при включенном IDE)
