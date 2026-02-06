@@ -4,13 +4,14 @@ import {CustomTableHead} from '../UI/Table/CustomTableHead';
 import {Modal, Table, TableBody, TableRow} from '@mui/material';
 import {CustomTableHeadCell} from '../UI/Table/CustomTableHeadCell';
 import type {TaskData} from '../../types.ts';
-import {useAppContext} from '../../context/appContext.tsx';
 import {Clear} from '@mui/icons-material';
 import {ResetButton} from './styles.ts';
 import {useState} from 'react';
 import {TaskRow} from './TaskRow.tsx';
 import {ModalContent} from '../modals/ModalRemove';
 import {getTaskDescription} from '../../helpers/getTaskDescription.ts';
+import {useUnit} from 'effector-react';
+import {$savedTasks, clearTasks, removeTask} from '../../store/store.ts';
 
 interface Props {
   taskData: TaskData[];
@@ -21,7 +22,7 @@ const TaskTable = ({taskData, onConfirmContinuing}: Props) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [taskToRemoveId, setTaskToRemoveId] = useState<string | null>(null);
 
-  const {savedTasks, onClearTasks, onRemoveTask} = useAppContext();
+  const [savedTasks, onClearTasks, onRemoveTask] = useUnit([$savedTasks, clearTasks, removeTask]);
 
   const handleCloseModal = () => {
     setOpenModal(false);

@@ -65,7 +65,7 @@ export const ReportList = styled(Box)(({theme}) => ({
   flexDirection: 'column',
   gap: theme.spacing(4),
   padding: theme.spacing(4, 2),
-  background: '#3a3330',
+  background: '#3b444c',
   marginTop: theme.spacing(2),
   borderRadius: '0 8px 8px 0',
   color: '#dfdfdf',

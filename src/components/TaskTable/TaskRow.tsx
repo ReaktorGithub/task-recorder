@@ -4,8 +4,9 @@ import {useEffect, useState} from 'react';
 import {RowEdit} from './RowEdit.tsx';
 import {RowDisplay} from './RowDisplay.tsx';
 import {RowContinuing} from './RowContinuing.tsx';
-import {useAppContext} from '../../context/appContext.tsx';
-import {useFavicon} from '../../features/useFavicon.tsx';
+import {useFavicon} from '../../hooks/useFavicon.tsx';
+import {useUnit} from 'effector-react';
+import {$isAdding, updateTask} from '../../store/store.ts';
 
 interface Props {
   data: TaskData;
@@ -16,7 +17,8 @@ interface Props {
 const TaskRow = ({data, onClear, onConfirmContinuing}: Props) => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
 
-  const {onUpdateTask, isAdding} = useAppContext();
+  const [onUpdateTask, isAdding] = useUnit([updateTask, $isAdding]);
+
   const {onRecord} = useFavicon();
 
   useEffect(() => {

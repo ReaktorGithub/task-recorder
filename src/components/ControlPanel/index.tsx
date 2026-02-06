@@ -16,19 +16,51 @@ import {
   SaveButton,
 } from './styles.ts';
 import {Close, ContentCopy, Menu, Save} from '@mui/icons-material';
-import {useAppContext} from '../../context/appContext.tsx';
 import {type ChangeEvent, useState} from 'react';
 import {Drawer, Modal, Switch, Typography} from '@mui/material';
 import {CustomTextField} from '../UI/CustomTextField';
 import {CustomNumberField} from '../UI/CustomNumberField';
 import {CloseDayModal} from '../modals/CloseDayModal';
+import {useUnit} from 'effector-react';
+import {
+  $canSave,
+  $savedTasks,
+  $settings,
+  addReport,
+  report,
+  saveState,
+  setCanSave,
+  updateSettings,
+} from '../../store/store.ts';
 
 const ControlPanel = () => {
   const [openMenu, setOpenMenu] = useState<boolean>(false);
   const [openModal, setOpenModal] = useState<boolean>(false);
 
-  const {onSave, canSave, onReport, onUpdateSettings, settings, onAddReport, savedTasks} =
-    useAppContext();
+  const [
+    onSaveState,
+    canSave,
+    onSetCanSave,
+    onReport,
+    onUpdateSettings,
+    settings,
+    onAddReport,
+    savedTasks,
+  ] = useUnit([
+    saveState,
+    $canSave,
+    setCanSave,
+    report,
+    updateSettings,
+    $settings,
+    addReport,
+    $savedTasks,
+  ]);
+
+  const handleSave = () => {
+    onSaveState();
+    onSetCanSave(false);
+  };
 
   const handleOpenMenu = () => {
     setOpenMenu(true);
@@ -39,19 +71,19 @@ const ControlPanel = () => {
   };
 
   const handleUpdatePrefix = (value: string) => {
-    onUpdateSettings('prefix', value);
+    onUpdateSettings({field: 'prefix', value});
   };
 
   const handleUpdateStoryPoint = (value: string) => {
-    onUpdateSettings('storyPoint', parseInt(value));
+    onUpdateSettings({field: 'storyPoint', value: parseInt(value)});
   };
 
   const handleUpdateRoundDuration = (_: ChangeEvent<HTMLInputElement>, checked: boolean) => {
-    onUpdateSettings('roundDuration', checked);
+    onUpdateSettings({field: 'roundDuration', value: checked});
   };
 
   const handleUpdateAutosave = (_: ChangeEvent<HTMLInputElement>, checked: boolean) => {
-    onUpdateSettings('autosave', checked);
+    onUpdateSettings({field: 'autosave', value: checked});
   };
 
   // const handleUpdateStartNew = (_: ChangeEvent<HTMLInputElement>, checked: boolean) => {
@@ -81,7 +113,7 @@ const ControlPanel = () => {
             <Menu fontSize='large' />
           </MenuButton>
           {!settings.autosave && (
-            <SaveButton onClick={onSave} disabled={!canSave}>
+            <SaveButton onClick={handleSave} disabled={!canSave}>
               <Save /> Сохранить
             </SaveButton>
           )}

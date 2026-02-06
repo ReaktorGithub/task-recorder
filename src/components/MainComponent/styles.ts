@@ -23,7 +23,7 @@ export const AddButton = styled(Button)(() => ({
   borderRadius: '20px',
   width: '60px',
   height: '38px',
-  background: '#cb5900',
+  background: '#755844',
   minWidth: 'unset',
 
   '.MuiSvgIcon-root': {
@@ -33,7 +33,7 @@ export const AddButton = styled(Button)(() => ({
   },
 
   '&:hover': {
-    background: '#ff7700',
+    background: '#8a6851',
   },
 }));
 
