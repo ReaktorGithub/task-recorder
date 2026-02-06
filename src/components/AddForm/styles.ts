@@ -21,12 +21,12 @@ export const FormRow = styled(Box)(({theme}) => ({
 export const AddRecordButton = styled(Button)(() => ({
   borderRadius: '8px',
   height: '100%',
-  background: '#cb5900',
+  background: '#755844',
   color: '#fff',
   fontWeight: 'bold',
 
   '&:hover': {
-    background: '#ff7700',
+    background: '#8A6851',
   },
 }));
 

@@ -9,10 +9,11 @@ import {useEffect} from 'react';
 import {getTaskDescription} from '../../helpers/getTaskDescription.ts';
 import {getDurationClock} from '../../helpers/getDurationClock.ts';
 import {getMaybeRoundedDuration} from '../../helpers/getMaybeRoundedDuration.ts';
-import {useAppContext} from '../../context/appContext.tsx';
 import {calcDuration} from '../../helpers/calcDuration.ts';
 import {getCurrentTime} from '../../helpers/getCurrentTime.ts';
 import {EditTime} from '../EditTime';
+import {useUnit} from 'effector-react';
+import {$settings, updateTask} from '../../store/store.ts';
 
 interface Props {
   data: TaskData;
@@ -21,7 +22,7 @@ interface Props {
 }
 
 const RowContinuing = ({data, onCancel, onConfirm}: Props) => {
-  const {settings, onUpdateTask} = useAppContext();
+  const [settings, onUpdateTask] = useUnit([$settings, updateTask]);
 
   useEffect(() => {
     if (!data.continuing) {

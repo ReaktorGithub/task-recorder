@@ -8,7 +8,8 @@ import {AddButton, EditButton, ResetButton} from './styles.ts';
 import {AddRounded, Clear, Edit} from '@mui/icons-material';
 import {TableRow} from '@mui/material';
 import type {TaskData} from '../../types.ts';
-import {useAppContext} from '../../context/appContext.tsx';
+import {useUnit} from 'effector-react';
+import {$settings} from '../../store/store.ts';
 
 interface Props {
   data: TaskData;
@@ -19,7 +20,8 @@ interface Props {
 
 const RowDisplay = ({data, onClear, onStartEdit, onStartContinuing}: Props) => {
   const {id, title, taskNumber, duration} = data;
-  const {settings} = useAppContext();
+
+  const [settings] = useUnit([$settings]);
 
   const handleClear = () => {
     onClear(id);

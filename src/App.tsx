@@ -7,13 +7,19 @@ import {MainComponent} from './components/MainComponent';
 import {useLayoutEffect} from 'react';
 import {STORAGE_KEY} from './constants.ts';
 import {isAppData} from './helpers/isAppData.ts';
-import {useAppContext} from './context/appContext.tsx';
 import {ControlPanel} from './components/ControlPanel';
 import {Box} from '@mui/material';
 import {Report} from './components/Report';
+import {useUnit} from 'effector-react';
+import {setSavedTasks, setSettings, setAddingForm, setReports} from './store/store.ts';
 
 const App = () => {
-  const {onSetSavedTasks, onSetSettings, onSetAddingForm, onSetReports} = useAppContext();
+  const [onSetSavedTasks, onSetSettings, onSetAddingForm, onSetReports] = useUnit([
+    setSavedTasks,
+    setSettings,
+    setAddingForm,
+    setReports,
+  ]);
 
   useLayoutEffect(() => {
     const item = localStorage.getItem(STORAGE_KEY);

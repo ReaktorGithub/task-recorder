@@ -12,7 +12,7 @@ const CustomTableHead = ({children, ...props}: Props) => {
     <TableHead
       {...props}
       sx={{
-        backgroundColor: '#cd5a00',
+        backgroundColor: '#755844',
       }}
     >
       {children}

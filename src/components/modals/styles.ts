@@ -57,13 +57,13 @@ export const ConfirmButton = styled(Button)(() => ({
   height: '40px',
   width: '120px',
   borderRadius: '8px',
-  background: '#ff0000',
-  color: '#dfdfdf',
+  background: '#e42a2a',
+  color: '#ffffff',
   fontWeight: 'bold',
   fontSize: '18px',
 
   '&:hover': {
-    background: '#ff5454',
+    background: '#ff2f2f',
   },
 }));
 

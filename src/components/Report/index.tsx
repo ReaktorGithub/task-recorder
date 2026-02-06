@@ -15,7 +15,6 @@ import {
 } from './styles.ts';
 import {useState} from 'react';
 import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOutlined';
-import {useAppContext} from '../../context/appContext.tsx';
 import {Box, Modal} from '@mui/material';
 import {getTodayDateString} from '../../helpers/getTodayDateString.ts';
 import {ContentCopy, Delete} from '@mui/icons-material';
@@ -23,13 +22,15 @@ import {isBefore} from 'date-fns';
 import {copyDataToClipboard} from '../../helpers/copyDataToClipboard.ts';
 import {ModalContent} from '../modals/ModalRemove';
 import type {DayReport} from '../../types.ts';
+import {useUnit} from 'effector-react/compat';
+import {$reports, removeReport} from '../../store/store.ts';
 
 const Report = () => {
   const [open, setOpen] = useState<boolean>(true);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [reportToRemove, setTaskToRemove] = useState<DayReport | null>(null);
 
-  const {reports, onRemoveReport} = useAppContext();
+  const [reports, onRemoveReport] = useUnit([$reports, removeReport]);
 
   const toggleOpen = () => {
     setOpen(prev => !prev);

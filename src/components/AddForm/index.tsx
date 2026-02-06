@@ -7,9 +7,10 @@ import {useEffect, useState} from 'react';
 import {getCurrentTime} from '../../helpers/getCurrentTime.ts';
 import {CustomTextField} from '../UI/CustomTextField';
 import {calcDuration} from '../../helpers/calcDuration.ts';
-import {useAppContext} from '../../context/appContext.tsx';
 import {CustomNumberField} from '../UI/CustomNumberField';
 import {EditTime} from '../EditTime';
+import {useUnit} from 'effector-react';
+import {$addingFormData, $settings, addTask, updateAddingForm} from '../../store/store.ts';
 
 interface Props {
   onCancel: () => void;
@@ -17,7 +18,12 @@ interface Props {
 }
 
 const AddForm = ({onCancel, onAdded}: Props) => {
-  const {onAddTask, settings, onUpdateAddingForm, addingFormData} = useAppContext();
+  const [onAddTask, settings, onUpdateAddingForm, addingFormData] = useUnit([
+    addTask,
+    $settings,
+    updateAddingForm,
+    $addingFormData,
+  ]);
 
   let hourDefault = '';
   let minuteDefault = '';
@@ -81,6 +87,7 @@ const AddForm = ({onCancel, onAdded}: Props) => {
       duration: calcDuration({hours: hourBeginInt, minutes: minuteBeginInt}, currentTime),
       continuing: null,
       collectedOn: new Date(),
+      isContinuing: false,
     });
 
     if (settings.startNewAfterDone) {

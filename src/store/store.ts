@@ -31,19 +31,21 @@ export const saveToStorageFx = createEffect<SavePayload, void>(payload =>
 
 // Простые setter-события
 
+export const setCanSave = createEvent<boolean>();
 export const setReports = createEvent<DayReport[]>();
 export const setSavedTasks = createEvent<TaskData[]>();
 export const setSettings = createEvent<Settings>();
 export const setAddingForm = createEvent<AddingFormData | null>();
 export const setIsAdding = createEvent<boolean>();
 
+$canSave.on(setCanSave, (_, v) => v);
 $reports.on(setReports, (_, v) => v);
 $savedTasks.on(setSavedTasks, (_, v) => v);
 $settings.on(setSettings, (_, v) => v);
 $addingFormData.on(setAddingForm, (_, v) => v);
 $isAdding.on(setIsAdding, (_, v) => v);
 
-// Обновление addingFormData + autosave (как debounce в React)
+// Обновление addingFormData + autosave
 
 export const updateAddingForm = createEvent<AddingFormData | null>();
 
@@ -146,22 +148,149 @@ sample({
   target: saveToStorageFx,
 });
 
-// Генерация и копирование отчёта
+// Сохранение
 
-export const reportFx = createEffect<{tasks: TaskData[]; settings: Settings}, void>(
-  ({tasks, settings}) => {
-    const report = getDayReport(tasks, settings.storyPoint, settings.roundDuration);
-    return copyDataToClipboard(report);
+export const saveState = createEvent();
+
+sample({
+  clock: saveState,
+  source: {
+    data: $savedTasks,
+    settings: $settings,
+    addingFormData: $addingFormData,
+    reports: $reports,
   },
-);
+  fn: ({data, settings, addingFormData, reports}) => ({
+    data,
+    settings,
+    addingFormData,
+    reports,
+  }),
+  target: saveToStorageFx,
+});
+
+// Обновление настроек (аналог onUpdateSettings)
+
+export const updateSettings = createEvent<{field: keyof Settings; value: unknown}>();
+
+$settings.on(updateSettings, (settings, {field, value}) => {
+  const newSettings: Settings = {
+    ...settings,
+    [field]: value,
+  };
+  return newSettings;
+});
+
+sample({
+  clock: updateSettings,
+  source: {
+    data: $savedTasks,
+    settings: $settings,
+    addingFormData: $addingFormData,
+    reports: $reports,
+  },
+  fn: ({data, settings, addingFormData, reports}, {field, value}) => {
+    const newSettings: Settings = {
+      ...settings,
+      [field]: value,
+    };
+
+    return {
+      data,
+      settings: newSettings,
+      addingFormData,
+      reports,
+    };
+  },
+  target: saveToStorageFx,
+});
+
+// Копирование отчёта (аналог onReport)
+
+type ReportPayload = {
+  data: TaskData[];
+  settings: Settings;
+};
 
 export const report = createEvent();
+
+const copyReportFx = createEffect<ReportPayload, void>(({data, settings}) => {
+  const reportText = getDayReport(data, settings.storyPoint, settings.roundDuration);
+  return copyDataToClipboard(reportText);
+});
 
 sample({
   clock: report,
   source: {
-    tasks: $savedTasks,
+    data: $savedTasks,
     settings: $settings,
   },
-  target: reportFx,
+  fn: ({data, settings}) => ({
+    data,
+    settings,
+  }),
+  target: copyReportFx,
+});
+
+// Работа с дневными отчётами (аналог onAddReport / onRemoveReport)
+
+export const addReport = createEvent();
+export const removeReport = createEvent<string>();
+
+// Внутреннее событие изменения списка отчётов
+
+const reportsChanged = createEvent<DayReport[]>();
+
+$reports.on(reportsChanged, (_, next) => next);
+
+// Добавление отчёта дня + очистка задач и формы
+
+const clearAddingForm = updateAddingForm.prepend(() => null);
+
+sample({
+  clock: addReport,
+  source: {
+    data: $savedTasks,
+    settings: $settings,
+    reports: $reports,
+  },
+  fn: ({data, settings, reports}) => {
+    const {storyPoint, roundDuration} = settings;
+    const reportText = getDayReport(data, storyPoint, roundDuration);
+    const id = String(new Date().getTime());
+    const newReport: DayReport = {
+      id,
+      report: reportText,
+      collectedOn: new Date(),
+    };
+
+    return [...reports, newReport];
+  },
+  target: [reportsChanged, clearTasks, clearAddingForm],
+});
+
+// Удаление отчёта
+
+sample({
+  clock: removeReport,
+  source: $reports,
+  fn: (reports, id) => reports.filter(report => report.id !== id),
+  target: reportsChanged,
+});
+
+// Автосохранение при изменении отчётов (как в onAddReport/onRemoveReport)
+
+sample({
+  clock: reportsChanged,
+  source: {
+    settings: $settings,
+  },
+  filter: ({settings}) => settings.autosave,
+  fn: ({settings}, reports) => ({
+    data: [],
+    settings,
+    addingFormData: null,
+    reports,
+  }),
+  target: saveToStorageFx,
 });

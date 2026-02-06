@@ -78,7 +78,7 @@ export const SaveButton = styled(Button)(({theme}) => ({
 export const CloseDayButton = styled(Button)(({theme}) => ({
   height: '40px',
   borderRadius: '8px',
-  background: '#cb5900',
+  background: '#755844',
   color: '#dfdfdf',
   textTransform: 'none',
   flexShrink: 0,
@@ -87,7 +87,7 @@ export const CloseDayButton = styled(Button)(({theme}) => ({
   fontSize: '16px',
 
   '&:hover': {
-    background: '#e67014',
+    background: '#8A6851',
   },
 
   '&.Mui-disabled': {

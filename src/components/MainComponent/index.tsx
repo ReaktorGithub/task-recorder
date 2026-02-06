@@ -9,33 +9,47 @@ import {AddRounded} from '@mui/icons-material';
 import {AddForm} from '../AddForm';
 import {calcTotalWorkTime} from '../../helpers/calcTotalWorkTime.ts';
 import {TOTAL_WORK_TIME_MINUTES} from '../../constants.ts';
-import {useAppContext} from '../../context/appContext.tsx';
 import {TaskTable} from '../TaskTable';
 import {getCurrentTime} from '../../helpers/getCurrentTime.ts';
 import {addMinutesToTime} from '../../helpers/addMinutesToTime.ts';
 import {calcTotalWorkTimeRounded} from '../../helpers/calcTotalWorkTimeRounded.ts';
-import {useFavicon} from '../../features/useFavicon.tsx';
+import {useFavicon} from '../../hooks/useFavicon.tsx';
+import {useUnit} from 'effector-react';
+import {
+  $addingFormData,
+  $isAdding,
+  $savedTasks,
+  $settings,
+  setIsAdding,
+} from '../../store/store.ts';
 
 const MainComponent = () => {
-  const {savedTasks, settings, addingFormData, isAdding, onIsAdding} = useAppContext();
+  const [savedTasks, settings, addingFormData, isAdding, onSetIsAdding] = useUnit([
+    $savedTasks,
+    $settings,
+    $addingFormData,
+    $isAdding,
+    setIsAdding,
+  ]);
+
   const {onRecord} = useFavicon();
 
   useEffect(() => {
     if (addingFormData) {
       onRecord(true);
-      onIsAdding(true);
+      onSetIsAdding(true);
     }
-  }, [addingFormData, onIsAdding, onRecord]);
+  }, [addingFormData, onSetIsAdding, onRecord]);
 
   const handleAdd = () => {
     onRecord(true);
-    onIsAdding(true);
+    onSetIsAdding(true);
   };
 
   const handleCancel = () => {
     const isSomeContinuing = savedTasks.some(task => task.isContinuing);
     onRecord(isSomeContinuing);
-    onIsAdding(false);
+    onSetIsAdding(false);
   };
 
   const sortedData = [...savedTasks].sort((a, b) => {
